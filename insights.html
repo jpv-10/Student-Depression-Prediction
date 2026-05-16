@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+{% block title %}Insights{% endblock %}
+{% block body_class %}page--insights{% endblock %}
+
+{% block content %}
+
+<header class="page-header">
+    <div class="page-header__inner">
+        <span class="page-header__tag">
+            <i class="ph ph-sparkle" aria-hidden="true"></i> AI Intelligence
+        </span>
+        <h1 class="page-header__title">Wellness <em>Insights</em></h1>
+        <p class="page-header__sub">
+            Feature-importance analysis, wellness indicators, and AI-generated guidance
+            distilled from our trained Random Forest and XGBoost ensemble.
+        </p>
+    </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FEATURE IMPORTANCE SECTION
+══════════════════════════════════════════════════════════════════ -->
+<section class="insights-importance" aria-labelledby="fi-heading">
+    <header class="section-header">
+        <span class="section-header__tag">
+            <i class="ph ph-chart-bar" aria-hidden="true"></i> Model Analysis
+        </span>
+        <h2 class="section-header__title" id="fi-heading">
+            Feature <em>Importance</em> Rankings
+        </h2>
+        <p class="section-header__sub">
+            Which factors contribute most to depression risk prediction, according to our ML model.
+        </p>
+    </header>
+
+    <div class="fi-grid">
+        {% for item in feature_importance %}
+        <article class="fi-card glass-card" aria-label="{{ item.feature }}: {{ (item.importance * 100) | round(0) | int }}% importance">
+            <div class="fi-card__header">
+                <h3 class="fi-card__name">{{ item.feature }}</h3>
+                <span class="fi-card__pct">{{ (item.importance * 100) | round(1) }}%</span>
+            </div>
+            <div class="fi-card__bar-wrap">
+                <div class="fi-card__bar"
+                     style="--w:{{ (item.importance * 100 / 0.28) | round(1) }}%"
+                     role="progressbar"
+                     aria-valuenow="{{ (item.importance * 100) | round(1) }}"
+                     aria-valuemin="0"
+                     aria-valuemax="28">
+                </div>
+            </div>
+            <p class="fi-card__desc">
+                {% if item.feature == 'Suicidal Thoughts' %}
+                    Strongest single predictor. Its presence dramatically elevates predicted risk class.
+                {% elif item.feature == 'Academic Pressure' %}
+                    Chronic high academic pressure is a major depression trigger in student populations.
+                {% elif item.feature == 'Sleep Duration' %}
+                    Both insufficient and excessive sleep are associated with elevated depression risk.
+                {% elif item.feature == 'Financial Stress' %}
+                    Financial insecurity amplifies anxiety and depressive symptoms significantly.
+                {% elif item.feature == 'Social Support' %}
+                    Strong social networks act as a protective buffer against depression onset.
+                {% elif item.feature == 'Family History Mental Illness' %}
+                    Genetic and environmental family factors increase predisposition to depression.
+                {% elif item.feature == 'Loneliness' %}
+                    Persistent loneliness is a key independent risk factor for mental health decline.
+                {% elif item.feature == 'Dietary Habits' %}
+                    Nutritional quality directly affects brain chemistry and mood regulation.
+                {% else %}
+                    Regular physical activity is a proven mood regulator and depression preventive.
+                {% endif %}
+            </p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     MENTAL WELLNESS INDICATORS
+══════════════════════════════════════════════════════════════════ -->
+<section class="wellness-indicators" aria-labelledby="wi-heading">
+    <header class="section-header">
+        <span class="section-header__tag">
+            <i class="ph ph-heartbeat" aria-hidden="true"></i> Wellbeing
+        </span>
+        <h2 class="section-header__title" id="wi-heading">
+            Mental <em>Wellness Indicators</em>
+        </h2>
+    </header>
+
+    <div class="wellness-grid">
+
+        <article class="wellness-card glass-card wellness-card--purple">
+            <div class="wellness-card__header">
+                <i class="ph ph-moon wellness-card__icon" aria-hidden="true"></i>
+                <h3 class="wellness-card__title">Sleep Hygiene</h3>
+            </div>
+            <div class="wellness-card__meter" role="img" aria-label="Sleep importance: high">
+                <div class="wellness-card__fill" style="--w:85%"></div>
+            </div>
+            <p class="wellness-card__body">
+                7–9 hours of quality sleep is the single most impactful lifestyle change for mental wellness.
+                Disrupted sleep patterns double the risk of depressive episodes.
+            </p>
+            <ul class="wellness-card__tips" role="list">
+                <li>Maintain a consistent sleep schedule</li>
+                <li>Avoid screens 60 min before bed</li>
+                <li>Keep bedroom cool and dark</li>
+            </ul>
+        </article>
+
+        <article class="wellness-card glass-card wellness-card--pink">
+            <div class="wellness-card__header">
+                <i class="ph ph-users wellness-card__icon" aria-hidden="true"></i>
+                <h3 class="wellness-card__title">Social Connection</h3>
+            </div>
+            <div class="wellness-card__meter" role="img" aria-label="Social connection importance: high">
+                <div class="wellness-card__fill wellness-card__fill--pink" style="--w:72%"></div>
+            </div>
+            <p class="wellness-card__body">
+                Strong social bonds reduce depression risk by up to 50%. Even one deep connection can serve
+                as a powerful mental health anchor during stressful periods.
+            </p>
+            <ul class="wellness-card__tips" role="list">
+                <li>Spend time with peers weekly</li>
+                <li>Join a study circle or club</li>
+                <li>Reach out to family regularly</li>
+            </ul>
+        </article>
+
+        <article class="wellness-card glass-card wellness-card--blue">
+            <div class="wellness-card__header">
+                <i class="ph ph-person-simple-run wellness-card__icon" aria-hidden="true"></i>
+                <h3 class="wellness-card__title">Physical Activity</h3>
+            </div>
+            <div class="wellness-card__meter" role="img" aria-label="Physical activity importance: moderate">
+                <div class="wellness-card__fill wellness-card__fill--blue" style="--w:60%"></div>
+            </div>
+            <p class="wellness-card__body">
+                30 minutes of moderate aerobic activity daily increases serotonin and endorphin levels,
+                producing measurable reductions in anxiety and depression symptoms.
+            </p>
+            <ul class="wellness-card__tips" role="list">
+                <li>Walk or cycle for 30 min daily</li>
+                <li>Try yoga or stretching routines</li>
+                <li>Take active breaks during study</li>
+            </ul>
+        </article>
+
+        <article class="wellness-card glass-card wellness-card--purple">
+            <div class="wellness-card__header">
+                <i class="ph ph-fork-knife wellness-card__icon" aria-hidden="true"></i>
+                <h3 class="wellness-card__title">Nutrition &amp; Diet</h3>
+            </div>
+            <div class="wellness-card__meter" role="img" aria-label="Nutrition importance: moderate">
+                <div class="wellness-card__fill" style="--w:55%"></div>
+            </div>
+            <p class="wellness-card__body">
+                A diet rich in omega-3s, B vitamins, and antioxidants supports brain health.
+                Skipping meals or relying on ultra-processed foods correlates with higher depression scores.
+            </p>
+            <ul class="wellness-card__tips" role="list">
+                <li>Eat regular balanced meals</li>
+                <li>Include fruits and vegetables daily</li>
+                <li>Limit caffeine and alcohol</li>
+            </ul>
+        </article>
+
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PRODUCTIVITY ANALYSIS
+══════════════════════════════════════════════════════════════════ -->
+<section class="productivity-section" aria-labelledby="prod-heading">
+    <header class="section-header">
+        <span class="section-header__tag">
+            <i class="ph ph-lightning" aria-hidden="true"></i> Productivity
+        </span>
+        <h2 class="section-header__title" id="prod-heading">
+            Academic <em>Productivity</em> Analysis
+        </h2>
+        <p class="section-header__sub">
+            How academic habits interact with mental health outcomes in student populations.
+        </p>
+    </header>
+
+    <div class="productivity-grid">
+
+        <div class="prod-card glass-card">
+            <div class="prod-card__icon" aria-hidden="true"><i class="ph ph-books"></i></div>
+            <h3 class="prod-card__title">Optimal Study Hours</h3>
+            <div class="prod-card__range">
+                <span class="prod-card__range-val">4–6</span>
+                <span class="prod-card__range-unit">hrs/day</span>
+            </div>
+            <p class="prod-card__body">
+                Studies show 4–6 focused study hours daily outperforms 10+ hours of distracted study
+                while significantly reducing burnout risk.
+            </p>
+        </div>
+
+        <div class="prod-card glass-card">
+            <div class="prod-card__icon prod-card__icon--pink" aria-hidden="true"><i class="ph ph-graduation-cap"></i></div>
+            <h3 class="prod-card__title">CGPA &amp; Mental Health</h3>
+            <div class="prod-card__range">
+                <span class="prod-card__range-val">7.0–8.5</span>
+                <span class="prod-card__range-unit">sweet spot</span>
+            </div>
+            <p class="prod-card__body">
+                Both very low and very high CGPA correlate with elevated stress. Students in the 7–8.5
+                range report the best balance of achievement and wellbeing.
+            </p>
+        </div>
+
+        <div class="prod-card glass-card">
+            <div class="prod-card__icon prod-card__icon--blue" aria-hidden="true"><i class="ph ph-timer"></i></div>
+            <h3 class="prod-card__title">Break Intervals</h3>
+            <div class="prod-card__range">
+                <span class="prod-card__range-val">25 + 5</span>
+                <span class="prod-card__range-unit">min cycle</span>
+            </div>
+            <p class="prod-card__body">
+                The Pomodoro technique (25 min focus + 5 min break) improves retention and reduces
+                the cognitive fatigue that fuels academic pressure scores.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     AI RECOMMENDATION CARDS
+══════════════════════════════════════════════════════════════════ -->
+<section class="ai-recs-section" aria-labelledby="ai-recs-heading">
+    <header class="section-header">
+        <span class="section-header__tag">
+            <i class="ph ph-robot" aria-hidden="true"></i> AI Guidance
+        </span>
+        <h2 class="section-header__title" id="ai-recs-heading">
+            Universal <em>Wellness</em> Recommendations
+        </h2>
+    </header>
+
+    <div class="ai-recs-grid">
+
+        <article class="ai-rec-card glass-card">
+            <span class="ai-rec-card__priority ai-rec-card__priority--high">High Priority</span>
+            <i class="ph ph-couch ai-rec-card__icon" aria-hidden="true"></i>
+            <h3 class="ai-rec-card__title">Seek Professional Support</h3>
+            <p class="ai-rec-card__body">
+                Counselling is proactive self-care, not a sign of weakness. Regular therapy sessions
+                significantly reduce risk trajectory across all severity levels.
+            </p>
+        </article>
+
+        <article class="ai-rec-card glass-card">
+            <span class="ai-rec-card__priority ai-rec-card__priority--medium">Medium Priority</span>
+            <i class="ph ph-pencil ai-rec-card__icon" aria-hidden="true"></i>
+            <h3 class="ai-rec-card__title">Daily Journaling</h3>
+            <p class="ai-rec-card__body">
+                10 minutes of reflective writing per day helps identify stress triggers, regulate
+                emotions, and build resilience over time.
+            </p>
+        </article>
+
+        <article class="ai-rec-card glass-card">
+            <span class="ai-rec-card__priority ai-rec-card__priority--low">Preventive</span>
+            <i class="ph ph-flower-lotus ai-rec-card__icon" aria-hidden="true"></i>
+            <h3 class="ai-rec-card__title">Mindfulness Practice</h3>
+            <p class="ai-rec-card__body">
+                As little as 10 minutes of mindfulness meditation daily reduces cortisol levels and
+                improves emotional regulation over a 4-week period.
+            </p>
+        </article>
+
+        <article class="ai-rec-card glass-card">
+            <span class="ai-rec-card__priority ai-rec-card__priority--medium">Medium Priority</span>
+            <i class="ph ph-users-three ai-rec-card__icon" aria-hidden="true"></i>
+            <h3 class="ai-rec-card__title">Build Your Support Network</h3>
+            <p class="ai-rec-card__body">
+                Actively cultivating at least 3 trusted social relationships creates a robust mental
+                safety net that buffers against depressive episodes.
+            </p>
+        </article>
+
+    </div>
+</section>
+
+
+<!-- CTA to predict -->
+<div class="insights-cta-banner glass-card" aria-label="Get personalised insights">
+    <div class="insights-cta-banner__content">
+        <h2 class="insights-cta-banner__title">Get <em>Personalised</em> Insights</h2>
+        <p class="insights-cta-banner__sub">
+            Run the AI assessment to receive recommendations tailored specifically to your profile.
+        </p>
+        <a href="{{ url_for('predict') }}" class="btn btn--neon">
+            <i class="ph ph-activity" aria-hidden="true"></i>
+            Take Assessment
+        </a>
+    </div>
+</div>
+
+{% endblock %}

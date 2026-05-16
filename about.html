@@ -1,0 +1,444 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+{% block body_class %}page--about{% endblock %}
+
+{% block content %}
+
+<header class="page-header">
+    <div class="page-header__inner">
+        <span class="page-header__tag">
+            <i class="ph ph-info" aria-hidden="true"></i> The Science
+        </span>
+        <h1 class="page-header__title">About <em>DepriSense</em></h1>
+        <p class="page-header__sub">
+            A full-stack AI mental health platform built on rigorous machine learning research.
+            Here's exactly how it works.
+        </p>
+    </div>
+    <div class="page-header__badge {% if model_loaded %}badge badge--success{% else %}badge badge--warning{% endif %}"
+         role="status">
+        {% if model_loaded %}
+        <i class="ph ph-check-circle" aria-hidden="true"></i> Model Loaded
+        {% else %}
+        <i class="ph ph-flask" aria-hidden="true"></i> Demo Mode
+        {% endif %}
+    </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     MISSION STATEMENT
+══════════════════════════════════════════════════════════════════ -->
+<section class="about-mission glass-card" aria-label="Mission statement">
+    <div class="about-mission__icon" aria-hidden="true"><i class="ph ph-brain-circuit"></i></div>
+    <div class="about-mission__body">
+        <h2 class="about-mission__title">Our Mission</h2>
+        <p class="about-mission__text">
+            DepriSense was created to bridge the gap between clinical mental health screening and
+            accessible technology. By applying state-of-the-art machine learning to student wellness data,
+            we enable early identification of depression risk — when intervention is most effective.
+            This tool is open, transparent, and entirely educational.
+        </p>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     ML PIPELINE WORKFLOW
+══════════════════════════════════════════════════════════════════ -->
+<section class="ml-workflow" aria-labelledby="workflow-heading">
+    <header class="section-header">
+        <span class="section-header__tag">
+            <i class="ph ph-git-branch" aria-hidden="true"></i> ML Pipeline
+        </span>
+        <h2 class="section-header__title" id="workflow-heading">
+            Machine Learning <em>Workflow</em>
+        </h2>
+        <p class="section-header__sub">
+            From raw student survey data to deployed prediction API — every step explained.
+        </p>
+    </header>
+
+    <ol class="workflow-steps" role="list">
+
+        <li class="workflow-step">
+            <div class="workflow-step__num" aria-hidden="true">01</div>
+            <div class="workflow-step__connector" aria-hidden="true"></div>
+            <div class="workflow-step__content glass-card">
+                <div class="workflow-step__icon" aria-hidden="true">
+                    <i class="ph ph-database"></i>
+                </div>
+                <div class="workflow-step__body">
+                    <h3 class="workflow-step__title">Data Collection</h3>
+                    <p class="workflow-step__desc">
+                        Student survey data comprising 18 features spanning demographic, academic, lifestyle,
+                        and psychological factors. Labels assigned as Low / Moderate / High risk.
+                    </p>
+                    <ul class="workflow-step__tags" role="list">
+                        <li class="tag">18 Features</li>
+                        <li class="tag">3 Classes</li>
+                        <li class="tag">Survey-based</li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="workflow-step">
+            <div class="workflow-step__num" aria-hidden="true">02</div>
+            <div class="workflow-step__connector" aria-hidden="true"></div>
+            <div class="workflow-step__content glass-card">
+                <div class="workflow-step__icon workflow-step__icon--pink" aria-hidden="true">
+                    <i class="ph ph-funnel"></i>
+                </div>
+                <div class="workflow-step__body">
+                    <h3 class="workflow-step__title">Data Preprocessing</h3>
+                    <p class="workflow-step__desc">
+                        Missing value imputation, categorical encoding (binary and ordinal),
+                        feature scaling with StandardScaler, and outlier removal via IQR filtering.
+                    </p>
+                    <ul class="workflow-step__tags" role="list">
+                        <li class="tag">Label Encoding</li>
+                        <li class="tag">StandardScaler</li>
+                        <li class="tag">IQR Filtering</li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="workflow-step">
+            <div class="workflow-step__num" aria-hidden="true">03</div>
+            <div class="workflow-step__connector" aria-hidden="true"></div>
+            <div class="workflow-step__content glass-card">
+                <div class="workflow-step__icon workflow-step__icon--blue" aria-hidden="true">
+                    <i class="ph ph-scales"></i>
+                </div>
+                <div class="workflow-step__body">
+                    <h3 class="workflow-step__title">SMOTE Balancing</h3>
+                    <p class="workflow-step__desc">
+                        Synthetic Minority Oversampling Technique (SMOTE) addresses class imbalance by
+                        generating synthetic training examples for under-represented risk classes,
+                        preventing the model from biasing towards the majority "Low" class.
+                    </p>
+                    <ul class="workflow-step__tags" role="list">
+                        <li class="tag">SMOTE</li>
+                        <li class="tag">Class Balance</li>
+                        <li class="tag">Imbalanced-learn</li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="workflow-step">
+            <div class="workflow-step__num" aria-hidden="true">04</div>
+            <div class="workflow-step__connector" aria-hidden="true"></div>
+            <div class="workflow-step__content glass-card">
+                <div class="workflow-step__icon" aria-hidden="true">
+                    <i class="ph ph-tree-structure"></i>
+                </div>
+                <div class="workflow-step__body">
+                    <h3 class="workflow-step__title">Model Training &amp; Selection</h3>
+                    <p class="workflow-step__desc">
+                        Multiple classifiers evaluated with stratified 5-fold cross-validation.
+                        Final ensemble combines Random Forest and XGBoost for optimal accuracy and
+                        feature-importance interpretability.
+                    </p>
+                    <ul class="workflow-step__tags" role="list">
+                        <li class="tag">Random Forest</li>
+                        <li class="tag">XGBoost</li>
+                        <li class="tag">5-Fold CV</li>
+                        <li class="tag">GridSearchCV</li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="workflow-step">
+            <div class="workflow-step__num" aria-hidden="true">05</div>
+            <div class="workflow-step__connector" aria-hidden="true"></div>
+            <div class="workflow-step__content glass-card">
+                <div class="workflow-step__icon workflow-step__icon--pink" aria-hidden="true">
+                    <i class="ph ph-chart-line"></i>
+                </div>
+                <div class="workflow-step__body">
+                    <h3 class="workflow-step__title">Evaluation &amp; Validation</h3>
+                    <p class="workflow-step__desc">
+                        Model evaluated on a held-out test set using accuracy, precision, recall, F1-score,
+                        ROC-AUC, and confusion matrix analysis. Feature importance extracted via SHAP values.
+                    </p>
+                    <ul class="workflow-step__tags" role="list">
+                        <li class="tag">F1-Score</li>
+                        <li class="tag">ROC-AUC</li>
+                        <li class="tag">SHAP</li>
+                        <li class="tag">Confusion Matrix</li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="workflow-step">
+            <div class="workflow-step__num" aria-hidden="true">06</div>
+            <div class="workflow-step__content glass-card">
+                <div class="workflow-step__icon workflow-step__icon--blue" aria-hidden="true">
+                    <i class="ph ph-rocket-launch"></i>
+                </div>
+                <div class="workflow-step__body">
+                    <h3 class="workflow-step__title">Flask Deployment</h3>
+                    <p class="workflow-step__desc">
+                        Trained model serialised with Pickle and served via a production-grade Flask API.
+                        Features input validation, session-based history, JSON API endpoint, and
+                        optional PDF report generation via ReportLab.
+                    </p>
+                    <ul class="workflow-step__tags" role="list">
+                        <li class="tag">Flask</li>
+                        <li class="tag">Pickle</li>
+                        <li class="tag">ReportLab</li>
+                        <li class="tag">REST API</li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+    </ol>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     ALGORITHMS DEEP DIVE
+══════════════════════════════════════════════════════════════════ -->
+<section class="algorithms-section" aria-labelledby="algo-heading">
+    <header class="section-header">
+        <span class="section-header__tag">
+            <i class="ph ph-cpu" aria-hidden="true"></i> Algorithms
+        </span>
+        <h2 class="section-header__title" id="algo-heading">
+            Algorithms <em>Used</em>
+        </h2>
+    </header>
+
+    <div class="algo-grid">
+
+        <article class="algo-card glass-card">
+            <div class="algo-card__header">
+                <i class="ph ph-tree-structure algo-card__icon" aria-hidden="true"></i>
+                <h3 class="algo-card__name">Random Forest</h3>
+                <span class="algo-card__accuracy">~91% Acc.</span>
+            </div>
+            <p class="algo-card__desc">
+                An ensemble of 200 decision trees. Reduces overfitting via bagging and provides
+                robust feature-importance scores through Gini impurity calculations.
+            </p>
+            <div class="algo-card__specs">
+                <span class="algo-card__spec"><strong>n_estimators:</strong> 200</span>
+                <span class="algo-card__spec"><strong>max_depth:</strong> None</span>
+                <span class="algo-card__spec"><strong>criterion:</strong> gini</span>
+            </div>
+        </article>
+
+        <article class="algo-card glass-card">
+            <div class="algo-card__header">
+                <i class="ph ph-lightning algo-card__icon algo-card__icon--pink" aria-hidden="true"></i>
+                <h3 class="algo-card__name">XGBoost</h3>
+                <span class="algo-card__accuracy">~93% Acc.</span>
+            </div>
+            <p class="algo-card__desc">
+                Gradient-boosted trees with regularisation. Optimised for both speed and accuracy
+                via second-order gradient approximations and hardware acceleration.
+            </p>
+            <div class="algo-card__specs">
+                <span class="algo-card__spec"><strong>n_estimators:</strong> 300</span>
+                <span class="algo-card__spec"><strong>learning_rate:</strong> 0.05</span>
+                <span class="algo-card__spec"><strong>max_depth:</strong> 6</span>
+            </div>
+        </article>
+
+        <article class="algo-card glass-card">
+            <div class="algo-card__header">
+                <i class="ph ph-circles-three algo-card__icon algo-card__icon--blue" aria-hidden="true"></i>
+                <h3 class="algo-card__name">SVM (Baseline)</h3>
+                <span class="algo-card__accuracy">~88% Acc.</span>
+            </div>
+            <p class="algo-card__desc">
+                Support Vector Machine with RBF kernel used as a baseline comparator.
+                Competitive accuracy but slower inference and limited feature interpretability.
+            </p>
+            <div class="algo-card__specs">
+                <span class="algo-card__spec"><strong>kernel:</strong> RBF</span>
+                <span class="algo-card__spec"><strong>C:</strong> 1.0</span>
+                <span class="algo-card__spec"><strong>gamma:</strong> scale</span>
+            </div>
+        </article>
+
+        <article class="algo-card glass-card">
+            <div class="algo-card__header">
+                <i class="ph ph-graph algo-card__icon" aria-hidden="true"></i>
+                <h3 class="algo-card__name">Logistic Regression</h3>
+                <span class="algo-card__accuracy">~82% Acc.</span>
+            </div>
+            <p class="algo-card__desc">
+                Multinomial logistic regression used for probabilistic output calibration
+                and interpretability benchmarking. Best explainability, lowest complexity.
+            </p>
+            <div class="algo-card__specs">
+                <span class="algo-card__spec"><strong>solver:</strong> lbfgs</span>
+                <span class="algo-card__spec"><strong>multi_class:</strong> auto</span>
+                <span class="algo-card__spec"><strong>max_iter:</strong> 1000</span>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SMOTE EXPLAINER
+══════════════════════════════════════════════════════════════════ -->
+<section class="smote-section glass-card" aria-labelledby="smote-heading">
+    <div class="smote-section__icon" aria-hidden="true"><i class="ph ph-scales"></i></div>
+    <div class="smote-section__body">
+        <h2 class="smote-section__title" id="smote-heading">
+            Understanding <em>SMOTE</em>
+        </h2>
+        <p class="smote-section__text">
+            Real-world depression datasets are heavily imbalanced — far more students fall into the
+            "Low Risk" category than "High Risk". Without correction, models learn to predict "Low"
+            for almost everything, achieving high accuracy while completely failing at the critical
+            high-risk cases.
+        </p>
+        <p class="smote-section__text">
+            <strong>SMOTE (Synthetic Minority Oversampling Technique)</strong> resolves this by
+            creating new synthetic training examples for minority classes. For each minority-class
+            sample, SMOTE selects k nearest neighbours and generates new points along the line
+            segments connecting them in feature space — not simply duplicating existing samples.
+        </p>
+        <div class="smote-visual" aria-hidden="true">
+            <div class="smote-visual__before">
+                <span class="smote-visual__label">Before SMOTE</span>
+                <div class="smote-bar smote-bar--low" style="--w:72%">Low: 72%</div>
+                <div class="smote-bar smote-bar--mod" style="--w:18%">Moderate: 18%</div>
+                <div class="smote-bar smote-bar--high" style="--w:10%">High: 10%</div>
+            </div>
+            <i class="ph ph-arrow-right smote-visual__arrow"></i>
+            <div class="smote-visual__after">
+                <span class="smote-visual__label">After SMOTE</span>
+                <div class="smote-bar smote-bar--low" style="--w:33%">Low: 33%</div>
+                <div class="smote-bar smote-bar--mod" style="--w:33%">Moderate: 33%</div>
+                <div class="smote-bar smote-bar--high" style="--w:34%">High: 34%</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     ACCURACY METRICS
+══════════════════════════════════════════════════════════════════ -->
+<section class="accuracy-section" aria-labelledby="accuracy-heading">
+    <header class="section-header">
+        <span class="section-header__tag">
+            <i class="ph ph-target" aria-hidden="true"></i> Performance
+        </span>
+        <h2 class="section-header__title" id="accuracy-heading">
+            Model <em>Performance</em> Metrics
+        </h2>
+    </header>
+
+    <div class="metrics-grid">
+
+        <div class="metric-card glass-card">
+            <div class="metric-card__ring" aria-hidden="true">
+                <svg viewBox="0 0 80 80">
+                    <circle class="metric-card__track" cx="40" cy="40" r="34" />
+                    <circle class="metric-card__fill" cx="40" cy="40" r="34"
+                            stroke-dasharray="214" stroke-dashoffset="15" />
+                </svg>
+                <span class="metric-card__val">94%</span>
+            </div>
+            <h3 class="metric-card__label">Overall Accuracy</h3>
+        </div>
+
+        <div class="metric-card glass-card">
+            <div class="metric-card__ring" aria-hidden="true">
+                <svg viewBox="0 0 80 80">
+                    <circle class="metric-card__track" cx="40" cy="40" r="34" />
+                    <circle class="metric-card__fill metric-card__fill--pink" cx="40" cy="40" r="34"
+                            stroke-dasharray="214" stroke-dashoffset="19" />
+                </svg>
+                <span class="metric-card__val">91%</span>
+            </div>
+            <h3 class="metric-card__label">F1-Score (macro)</h3>
+        </div>
+
+        <div class="metric-card glass-card">
+            <div class="metric-card__ring" aria-hidden="true">
+                <svg viewBox="0 0 80 80">
+                    <circle class="metric-card__track" cx="40" cy="40" r="34" />
+                    <circle class="metric-card__fill metric-card__fill--blue" cx="40" cy="40" r="34"
+                            stroke-dasharray="214" stroke-dashoffset="11" />
+                </svg>
+                <span class="metric-card__val">95%</span>
+            </div>
+            <h3 class="metric-card__label">ROC-AUC</h3>
+        </div>
+
+        <div class="metric-card glass-card">
+            <div class="metric-card__ring" aria-hidden="true">
+                <svg viewBox="0 0 80 80">
+                    <circle class="metric-card__track" cx="40" cy="40" r="34" />
+                    <circle class="metric-card__fill" cx="40" cy="40" r="34"
+                            stroke-dasharray="214" stroke-dashoffset="21" />
+                </svg>
+                <span class="metric-card__val">90%</span>
+            </div>
+            <h3 class="metric-card__label">Precision (High Risk)</h3>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TECH STACK
+══════════════════════════════════════════════════════════════════ -->
+<section class="tech-stack" aria-labelledby="tech-heading">
+    <header class="section-header">
+        <span class="section-header__tag">
+            <i class="ph ph-stack" aria-hidden="true"></i> Stack
+        </span>
+        <h2 class="section-header__title" id="tech-heading">Technology <em>Stack</em></h2>
+    </header>
+
+    <div class="tech-grid">
+        <div class="tech-item glass-card">
+            <i class="ph ph-snake tech-item__icon tech-item__icon--purple" aria-hidden="true"></i>
+            <span class="tech-item__name">Python 3.11</span>
+            <span class="tech-item__role">Core Language</span>
+        </div>
+        <div class="tech-item glass-card">
+            <i class="ph ph-flask tech-item__icon tech-item__icon--pink" aria-hidden="true"></i>
+            <span class="tech-item__name">Flask</span>
+            <span class="tech-item__role">Web Framework</span>
+        </div>
+        <div class="tech-item glass-card">
+            <i class="ph ph-robot tech-item__icon tech-item__icon--blue" aria-hidden="true"></i>
+            <span class="tech-item__name">scikit-learn</span>
+            <span class="tech-item__role">ML Toolkit</span>
+        </div>
+        <div class="tech-item glass-card">
+            <i class="ph ph-lightning tech-item__icon tech-item__icon--purple" aria-hidden="true"></i>
+            <span class="tech-item__name">XGBoost</span>
+            <span class="tech-item__role">Gradient Boosting</span>
+        </div>
+        <div class="tech-item glass-card">
+            <i class="ph ph-calculator tech-item__icon tech-item__icon--pink" aria-hidden="true"></i>
+            <span class="tech-item__name">NumPy &amp; Pandas</span>
+            <span class="tech-item__role">Data Manipulation</span>
+        </div>
+        <div class="tech-item glass-card">
+            <i class="ph ph-file-pdf tech-item__icon tech-item__icon--blue" aria-hidden="true"></i>
+            <span class="tech-item__name">ReportLab</span>
+            <span class="tech-item__role">PDF Generation</span>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

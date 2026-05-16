@@ -1,0 +1,1711 @@
+{% extends "base.html" %}
+{% block title %}Nova AI — Student Wellness Intelligence{% endblock %}
+{% block content %}
+
+<style>
+/* ═══════════════════════════════════════════
+   NOVA AI — PREMIUM REDESIGN
+   Font: Clash Display + DM Sans
+   Theme: Deep space, bioluminescent neon
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void: #030508;
+  --deep: #080c14;
+  --surface: #0d1421;
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.08);
+  --cyan: #00e5ff;
+  --violet: #7c3aed;
+  --aurora: #10ffa0;
+  --pink: #f72585;
+  --amber: #fbbf24;
+  --text-primary: #f0f4ff;
+  --text-secondary: #8a9bc4;
+  --text-muted: #3d4f6b;
+  --font-display: 'Clash Display', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NOISE TEXTURE OVERLAY ─────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* ── CANVAS ────────────────────────────── */
+#novaCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════
+   HERO
+   ══════════════════════════════════════════ */
+.nova-hero {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+  padding: 120px 7vw 80px;
+  z-index: 10;
+}
+
+/* Radial glow behind hero */
+.nova-hero::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -5%;
+  width: 60%;
+  height: 80%;
+  background: radial-gradient(ellipse at 30% 40%, rgba(124,58,237,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.nova-hero::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  right: -5%;
+  width: 50%;
+  height: 60%;
+  background: radial-gradient(ellipse at 70% 30%, rgba(0,229,255,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* — Left Column — */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,229,255,0.07);
+  border: 1px solid rgba(0,229,255,0.2);
+  border-radius: 100px;
+  padding: 6px 16px 6px 8px;
+  width: fit-content;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.eyebrow-dot {
+  width: 6px; height: 6px;
+  background: var(--cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--cyan);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+.hero-heading {
+  font-family: var(--font-display);
+  font-size: clamp(42px, 5.5vw, 76px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.hero-heading .line-break { display: block; }
+
+.hero-heading .glow-word {
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 45%, var(--pink) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 40px rgba(0,229,255,0.3));
+}
+
+.hero-heading .outline-word {
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.25);
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.hero-sub {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  font-weight: 400;
+  max-width: 460px;
+}
+
+.hero-sub strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.btn-nova-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, var(--violet), #4f46e5);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 30px rgba(124,58,237,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.btn-nova-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.btn-nova-primary:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(124,58,237,0.6), inset 0 1px 0 rgba(255,255,255,0.15); }
+.btn-nova-primary:hover::before { opacity: 1; }
+
+.btn-nova-primary .btn-spark {
+  font-size: 16px;
+  animation: spin-slow 4s linear infinite;
+}
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+
+.btn-nova-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  backdrop-filter: blur(12px);
+}
+.btn-nova-ghost:hover {
+  background: rgba(255,255,255,0.07);
+  color: var(--text-primary);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.hero-trust {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-top: 8px;
+  border-top: 1px solid var(--glass-border);
+}
+
+.trust-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.trust-num {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+.trust-num span { color: var(--cyan); }
+.trust-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+.trust-div { width: 1px; height: 32px; background: var(--glass-border); }
+
+/* — Right Column (Dashboard) — */
+.hero-right {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-shell {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+}
+
+/* Main card */
+.dash-main {
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  animation: float-main 6s ease-in-out infinite;
+}
+
+@keyframes float-main {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.02);
+}
+
+.dash-dots { display: flex; gap: 6px; }
+.dash-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.dash-dots span:nth-child(1) { background: #ff5f57; }
+.dash-dots span:nth-child(2) { background: #febc2e; }
+.dash-dots span:nth-child(3) { background: #28c840; }
+
+.dash-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.dash-status {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; color: var(--aurora);
+  letter-spacing: 0.08em;
+}
+.status-blink {
+  width: 6px; height: 6px; background: var(--aurora); border-radius: 50%;
+  box-shadow: 0 0 6px var(--aurora);
+  animation: blink 1.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.dash-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+/* Score ring */
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.score-ring-wrap {
+  position: relative;
+  width: 90px; height: 90px;
+  flex-shrink: 0;
+}
+.score-svg { width: 90px; height: 90px; transform: rotate(-90deg); }
+.score-track { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 7; }
+.score-fill {
+  fill: none;
+  stroke: url(#scoreGrad);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  animation: draw-ring 2s cubic-bezier(0.34,1.56,0.64,1) 0.5s forwards;
+}
+@keyframes draw-ring { to { stroke-dashoffset: 55; } }
+.score-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.score-val {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 700; color: var(--text-primary);
+  line-height: 1;
+}
+.score-sub { font-size: 9px; color: var(--text-muted); letter-spacing: 0.06em; margin-top: 2px; }
+
+.score-meta { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.meta-row { display: flex; align-items: center; justify-content: space-between; }
+.meta-label { font-size: 12px; color: var(--text-secondary); }
+.meta-bar-wrap { flex: 1; max-width: 120px; height: 4px; background: rgba(255,255,255,0.06); border-radius: 99px; margin: 0 10px; overflow: hidden; }
+.meta-bar {
+  height: 100%; border-radius: 99px;
+  animation: grow-bar 1.5s ease forwards;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+@keyframes grow-bar { to { transform: scaleX(1); } }
+.meta-val { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+
+/* Sparkline chart */
+.spark-section {}
+.spark-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.spark-title { font-size: 12px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.spark-change { font-size: 12px; color: var(--aurora); font-weight: 600; }
+
+.sparkline-canvas-wrap { height: 48px; }
+canvas.sparkline { width: 100%; height: 48px; }
+
+/* Metric pills row */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.metric-pill {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 10px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.metric-pill:hover { background: rgba(255,255,255,0.06); border-color: rgba(0,229,255,0.2); }
+.metric-pill .mp-icon { font-size: 18px; }
+.metric-pill .mp-val { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.metric-pill .mp-key { font-size: 9px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; text-align: center; }
+
+/* Float cards */
+.fc-chip {
+  position: absolute;
+  background: var(--deep);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+  backdrop-filter: blur(16px);
+  white-space: nowrap;
+  z-index: 10;
+}
+.fc-chip .chip-icon { font-size: 20px; }
+.fc-chip .chip-txt { display: flex; flex-direction: column; gap: 1px; }
+.fc-chip .chip-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.05em; }
+.fc-chip .chip-val { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text-primary); }
+
+.fc-a { top: -28px; right: -30px; animation: float-a 5s ease-in-out infinite; }
+.fc-b { bottom: -24px; left: -30px; animation: float-b 6s ease-in-out infinite; }
+.fc-c { top: 50%; right: -44px; transform: translateY(-50%); animation: float-c 7s ease-in-out infinite; }
+
+@keyframes float-a { 0%,100%{transform:translate(0,0) rotate(-2deg)} 50%{transform:translate(4px,-8px) rotate(2deg)} }
+@keyframes float-b { 0%,100%{transform:translate(0,0) rotate(1deg)} 50%{transform:translate(-4px,6px) rotate(-2deg)} }
+@keyframes float-c { 0%,100%{transform:translateY(-50%) rotate(0deg)} 50%{transform:translateY(calc(-50% - 8px)) rotate(2deg)} }
+
+/* ══════════════════════════════════════════
+   AI SHOWCASE SECTION
+   ══════════════════════════════════════════ */
+.showcase-section {
+  position: relative;
+  padding: 120px 7vw;
+  z-index: 10;
+}
+
+.showcase-section::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse, rgba(124,58,237,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.section-eyebrow {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 16px;
+}
+.ey-line { width: 32px; height: 1px; background: var(--cyan); }
+.ey-text {
+  font-size: 11px; font-weight: 600; color: var(--cyan);
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.grad-span {
+  background: linear-gradient(90deg, var(--cyan), var(--aurora));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-sub {
+  font-size: 16px; line-height: 1.7; color: var(--text-secondary);
+  max-width: 480px;
+}
+
+/* Showcase grid: left text + right modules */
+.showcase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.showcase-modules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ai-module {
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.ai-module::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 16px 16px 0 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.ai-module.mod-cyan::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+.ai-module.mod-violet::before { background: linear-gradient(90deg, var(--violet), transparent); }
+.ai-module.mod-aurora::before { background: linear-gradient(90deg, var(--aurora), transparent); }
+.ai-module.mod-pink::before { background: linear-gradient(90deg, var(--pink), transparent); }
+
+.ai-module:hover {
+  border-color: rgba(255,255,255,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+.ai-module:hover::before { opacity: 1; }
+
+.ai-module.mod-wide { grid-column: span 2; }
+
+.module-icon {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  margin-bottom: 14px;
+}
+.mod-cyan .module-icon { background: rgba(0,229,255,0.1); }
+.mod-violet .module-icon { background: rgba(124,58,237,0.15); }
+.mod-aurora .module-icon { background: rgba(16,255,160,0.1); }
+.mod-pink .module-icon { background: rgba(247,37,133,0.12); }
+
+.module-title {
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.module-desc {
+  font-size: 12px; line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* Wide module — inline bars */
+.mod-bars { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.mod-bar-row { display: flex; align-items: center; gap: 10px; }
+.mod-bar-label { font-size: 11px; color: var(--text-muted); width: 80px; flex-shrink: 0; }
+.mod-bar-track { flex: 1; height: 4px; background: rgba(255,255,255,0.05); border-radius: 99px; overflow: hidden; }
+.mod-bar-fill { height: 100%; border-radius: 99px; animation: grow-bar 1.8s ease forwards; transform-origin: left; transform: scaleX(0); }
+.mod-bar-pct { font-size: 11px; font-weight: 600; color: var(--text-primary); width: 32px; text-align: right; }
+
+/* ══════════════════════════════════════════
+   FEATURES SECTION
+   ══════════════════════════════════════════ */
+.features-section {
+  position: relative;
+  padding: 100px 7vw;
+  z-index: 10;
+}
+
+.features-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1100px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .features-grid { grid-template-columns: 1fr; } }
+
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.34,1.3,0.64,1);
+  group: '';
+}
+
+.feature-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(124,58,237,0.15), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  border-color: rgba(124,58,237,0.4);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.2);
+}
+.feature-card:hover::after { opacity: 1; }
+.feature-card:nth-child(2):hover::after { background: radial-gradient(circle at 50% 0%, rgba(0,229,255,0.12), transparent 60%); }
+.feature-card:nth-child(3):hover::after { background: radial-gradient(circle at 50% 0%, rgba(16,255,160,0.12), transparent 60%); }
+.feature-card:nth-child(4):hover::after { background: radial-gradient(circle at 50% 0%, rgba(247,37,133,0.12), transparent 60%); }
+
+.feature-card:nth-child(1) { --fc: var(--violet); }
+.feature-card:nth-child(2) { --fc: var(--cyan); }
+.feature-card:nth-child(3) { --fc: var(--aurora); }
+.feature-card:nth-child(4) { --fc: var(--pink); }
+
+.fc-icon-ring {
+  width: 54px; height: 54px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.feature-card:hover .fc-icon-ring {
+  transform: scale(1.1) rotate(-4deg);
+  box-shadow: 0 0 24px rgba(124,58,237,0.4);
+}
+.feature-card:nth-child(2):hover .fc-icon-ring { box-shadow: 0 0 24px rgba(0,229,255,0.4); }
+.feature-card:nth-child(3):hover .fc-icon-ring { box-shadow: 0 0 24px rgba(16,255,160,0.4); }
+.feature-card:nth-child(4):hover .fc-icon-ring { box-shadow: 0 0 24px rgba(247,37,133,0.4); }
+
+.fc-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  position: relative; z-index: 1;
+}
+
+.fc-desc {
+  font-size: 13px; line-height: 1.7;
+  color: var(--text-muted);
+  position: relative; z-index: 1;
+}
+
+.fc-arrow {
+  margin-top: 20px;
+  font-size: 18px;
+  color: var(--text-muted);
+  transition: color 0.2s, transform 0.2s;
+  display: block;
+}
+.feature-card:hover .fc-arrow {
+  color: var(--fc);
+  transform: translate(4px, -4px);
+}
+
+/* Corner decoration */
+.fc-corner {
+  position: absolute;
+  top: 20px; right: 20px;
+  width: 40px; height: 40px;
+  border-top: 1.5px solid rgba(255,255,255,0.06);
+  border-right: 1.5px solid rgba(255,255,255,0.06);
+  border-radius: 0 8px 0 0;
+  transition: border-color 0.3s;
+}
+.feature-card:hover .fc-corner { border-color: var(--fc); opacity: 0.5; }
+
+/* ══════════════════════════════════════════
+   ANALYTICS PREVIEW
+   ══════════════════════════════════════════ */
+.analytics-section {
+  padding: 100px 7vw;
+  position: relative;
+  z-index: 10;
+}
+
+.analytics-section::before {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 50%; height: 100%;
+  background: radial-gradient(ellipse at 80% 50%, rgba(0,229,255,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.analytics-cards { display: flex; flex-direction: column; gap: 12px; }
+
+.a-card {
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex; align-items: center; gap: 16px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.a-card:hover { border-color: rgba(0,229,255,0.2); transform: translateX(4px); }
+
+.a-card-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.a-card-body { flex: 1; }
+.a-card-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.a-card-sub { font-size: 12px; color: var(--text-muted); }
+.a-card-badge {
+  font-family: var(--font-display);
+  font-size: 13px; font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.badge-green { background: rgba(16,255,160,0.1); color: var(--aurora); }
+.badge-blue  { background: rgba(0,229,255,0.1);  color: var(--cyan); }
+.badge-violet{ background: rgba(124,58,237,0.15); color: #a78bfa; }
+.badge-amber { background: rgba(251,191,36,0.1);  color: var(--amber); }
+
+/* Big analytics widget */
+.analytics-widget {
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+}
+
+.aw-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.aw-title { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.aw-tabs { display: flex; gap: 4px; }
+.aw-tab {
+  font-size: 11px; padding: 4px 10px; border-radius: 6px;
+  color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.aw-tab.active { background: rgba(0,229,255,0.1); color: var(--cyan); border-color: rgba(0,229,255,0.2); }
+
+.aw-body { padding: 20px; }
+
+.big-chart-wrap { height: 180px; position: relative; margin-bottom: 20px; }
+canvas#bigChart { width: 100% !important; height: 180px !important; }
+
+.aw-stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; border-top: 1px solid var(--glass-border); padding-top: 16px;
+}
+.aw-stat { text-align: center; }
+.aw-stat-val {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+.aw-stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; letter-spacing: 0.05em; }
+
+/* ══════════════════════════════════════════
+   WELLNESS SHOWCASE
+   ══════════════════════════════════════════ */
+.wellness-section {
+  padding: 100px 7vw;
+  position: relative;
+  z-index: 10;
+}
+
+.wellness-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* Wellness radar-like visual */
+.wellness-visual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.w-card {
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.w-card:hover {
+  border-color: rgba(255,255,255,0.14);
+  transform: scale(1.02);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+}
+.w-card.large { grid-row: span 2; display: flex; flex-direction: column; }
+
+.w-card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.w-card-icon { font-size: 24px; }
+.w-card-trend {
+  font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px;
+}
+.trend-up { background: rgba(16,255,160,0.1); color: var(--aurora); }
+.trend-stable { background: rgba(0,229,255,0.1); color: var(--cyan); }
+.trend-warn { background: rgba(251,191,36,0.1); color: var(--amber); }
+
+.w-card-val {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.w-card-label { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+
+.w-mini-bar { height: 3px; background: rgba(255,255,255,0.05); border-radius: 99px; overflow: hidden; }
+.w-mini-fill { height: 100%; border-radius: 99px; }
+
+/* Ring in large card */
+.w-ring-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
+.w-ring-svg { width: 120px; height: 120px; }
+.w-ring-track { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 10; }
+.w-ring-fill {
+  fill: none; stroke: url(#wGrad);
+  stroke-width: 10; stroke-linecap: round;
+  stroke-dasharray: 280; stroke-dashoffset: 280;
+  animation: draw-ring 2.5s cubic-bezier(0.34,1.2,0.64,1) 0.8s forwards;
+}
+.w-ring-text { fill: var(--text-primary); font-family: var(--font-display); font-size: 18px; font-weight: 700; }
+.w-ring-sub  { fill: var(--text-muted); font-size: 10px; }
+
+.wellness-copy { display: flex; flex-direction: column; gap: 24px; }
+.wellness-points { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+.w-point {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  transition: border-color 0.2s;
+}
+.w-point:hover { border-color: rgba(0,229,255,0.2); }
+.w-point-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.w-point-text h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+.w-point-text p  { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+
+/* ══════════════════════════════════════════
+   CTA SECTION
+   ══════════════════════════════════════════ */
+.cta-section {
+  padding: 100px 7vw 140px;
+  position: relative;
+  z-index: 10;
+  text-align: center;
+}
+
+.cta-inner {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  padding: 80px 60px;
+  overflow: hidden;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.cta-inner::before {
+  content: '';
+  position: absolute;
+  top: -40%; left: 50%;
+  transform: translateX(-50%);
+  width: 500px; height: 300px;
+  background: radial-gradient(ellipse, rgba(124,58,237,0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, transparent 50%, rgba(247,37,133,0.04) 100%);
+  pointer-events: none;
+}
+
+.cta-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 11px; font-weight: 600; color: #a78bfa;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 24px;
+  position: relative; z-index: 1;
+}
+
+.cta-heading {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4vw, 54px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin-bottom: 20px;
+  position: relative; z-index: 1;
+}
+
+.cta-sub {
+  font-size: 16px; line-height: 1.7; color: var(--text-secondary);
+  max-width: 520px; margin: 0 auto 40px;
+  position: relative; z-index: 1;
+}
+
+.cta-buttons {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; flex-wrap: wrap;
+  position: relative; z-index: 1;
+}
+
+.btn-cta-main {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 36px;
+  background: linear-gradient(135deg, var(--violet), #4f46e5 60%, var(--cyan));
+  background-size: 200% 200%;
+  animation: grad-shift 4s ease infinite;
+  border: none; border-radius: 14px;
+  color: #fff; font-family: var(--font-body); font-size: 16px; font-weight: 600;
+  cursor: pointer; text-decoration: none;
+  box-shadow: 0 0 40px rgba(124,58,237,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+@keyframes grad-shift {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.btn-cta-main:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 0 60px rgba(124,58,237,0.7); }
+
+.btn-cta-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 16px 32px;
+  background: transparent; border: 1px solid var(--glass-border);
+  border-radius: 14px; color: var(--text-secondary);
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s; backdrop-filter: blur(12px);
+}
+.btn-cta-outline:hover { border-color: rgba(255,255,255,0.2); color: var(--text-primary); background: var(--glass); }
+
+.cta-note {
+  margin-top: 24px;
+  font-size: 13px; color: var(--text-muted);
+  position: relative; z-index: 1;
+}
+
+/* Grid decoration */
+.grid-decoration {
+  position: absolute; inset: 0; overflow: hidden;
+  border-radius: 28px; pointer-events: none;
+  opacity: 0.3;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .nova-hero { grid-template-columns: 1fr; gap: 60px; padding-top: 100px; }
+  .hero-right { display: none; }
+  .showcase-grid, .analytics-grid, .wellness-grid { grid-template-columns: 1fr; gap: 48px; }
+  .analytics-widget { max-width: 600px; }
+}
+
+@media (max-width: 640px) {
+  .nova-hero { padding: 90px 5vw 60px; }
+  .showcase-section, .features-section, .analytics-section, .wellness-section, .cta-section { padding: 80px 5vw; }
+  .hero-heading { font-size: 38px; }
+  .showcase-modules { grid-template-columns: 1fr; }
+  .ai-module.mod-wide { grid-column: span 1; }
+  .cta-inner { padding: 48px 24px; }
+  .aw-stats-row { grid-template-columns: 1fr; gap: 8px; }
+}
+</style>
+
+<!-- Canvas background -->
+<canvas id="novaCanvas"></canvas>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="nova-hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Next-Gen AI Wellness Platform
+    </div>
+
+    <h1 class="hero-heading">
+      <span class="line-break">Your Mind.</span>
+      <span class="line-break"><span class="glow-word">Understood</span></span>
+      <span class="line-break outline-word">By AI.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Nova AI fuses <strong>neural prediction</strong>, academic analysis, and mental wellness
+      signals into a single intelligent report — giving you the clarity to thrive.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/predict" class="btn-nova-primary">
+        <span class="btn-spark">✦</span>
+        Start AI Assessment
+        <span>→</span>
+      </a>
+      <a href="/dashboard" class="btn-nova-ghost">
+        View Dashboard ↗
+      </a>
+    </div>
+
+    <div class="hero-trust">
+      <div class="trust-stat">
+        <div class="trust-num">97<span>%</span></div>
+        <div class="trust-label">Accuracy</div>
+      </div>
+      <div class="trust-div"></div>
+      <div class="trust-stat">
+        <div class="trust-num">12<span>K+</span></div>
+        <div class="trust-label">Assessments</div>
+      </div>
+      <div class="trust-div"></div>
+      <div class="trust-stat">
+        <div class="trust-num"><span>&lt;</span>2s</div>
+        <div class="trust-label">Analysis Time</div>
+      </div>
+      <div class="trust-div"></div>
+      <div class="trust-stat">
+        <div class="trust-num">4</div>
+        <div class="trust-label">AI Modules</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Preview -->
+  <div class="hero-right">
+    <div class="dashboard-shell">
+      <!-- Float chips -->
+      <div class="fc-chip fc-a">
+        <span class="chip-icon">🎯</span>
+        <div class="chip-txt">
+          <span class="chip-label">AI Confidence</span>
+          <span class="chip-val">94.2%</span>
+        </div>
+      </div>
+      <div class="fc-chip fc-b">
+        <span class="chip-icon">⚡</span>
+        <div class="chip-txt">
+          <span class="chip-label">Neural Engine</span>
+          <span class="chip-val" style="color:var(--aurora)">Active</span>
+        </div>
+      </div>
+      <div class="fc-chip fc-c">
+        <span class="chip-icon">🔮</span>
+        <div class="chip-txt">
+          <span class="chip-label">Next Insight</span>
+          <span class="chip-val" style="color:var(--cyan)">Ready</span>
+        </div>
+      </div>
+
+      <!-- Main card -->
+      <div class="dash-main">
+        <div class="dash-header">
+          <div class="dash-dots"><span></span><span></span><span></span></div>
+          <span class="dash-title">Nova AI Analytics</span>
+          <span class="dash-status"><span class="status-blink"></span>LIVE</span>
+        </div>
+        <div class="dash-body">
+          <!-- Score ring -->
+          <div class="score-row">
+            <div class="score-ring-wrap">
+              <svg class="score-svg" viewBox="0 0 90 90">
+                <defs>
+                  <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00e5ff"/>
+                    <stop offset="50%" stop-color="#7c3aed"/>
+                    <stop offset="100%" stop-color="#10ffa0"/>
+                  </linearGradient>
+                </defs>
+                <circle class="score-track" cx="45" cy="45" r="35"/>
+                <circle class="score-fill" cx="45" cy="45" r="35"/>
+              </svg>
+              <div class="score-center">
+                <div class="score-val">72</div>
+                <div class="score-sub">WELLNESS</div>
+              </div>
+            </div>
+            <div class="score-meta">
+              <div class="meta-row">
+                <span class="meta-label">Academic</span>
+                <div class="meta-bar-wrap"><div class="meta-bar" style="width:84%;background:var(--cyan);animation-delay:0.3s"></div></div>
+                <span class="meta-val">8.4</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Sleep</span>
+                <div class="meta-bar-wrap"><div class="meta-bar" style="width:72%;background:var(--violet);animation-delay:0.5s"></div></div>
+                <span class="meta-val">7.2h</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Stress</span>
+                <div class="meta-bar-wrap"><div class="meta-bar" style="width:38%;background:var(--aurora);animation-delay:0.7s"></div></div>
+                <span class="meta-val">Low</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Social</span>
+                <div class="meta-bar-wrap"><div class="meta-bar" style="width:65%;background:var(--pink);animation-delay:0.9s"></div></div>
+                <span class="meta-val">Good</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sparkline -->
+          <div class="spark-section">
+            <div class="spark-header">
+              <span class="spark-title">Weekly Trend</span>
+              <span class="spark-change">↑ +8.3%</span>
+            </div>
+            <div class="sparkline-canvas-wrap">
+              <canvas class="sparkline" id="sparklineHero"></canvas>
+            </div>
+          </div>
+
+          <!-- Metrics row -->
+          <div class="metrics-row">
+            <div class="metric-pill">
+              <span class="mp-icon">🧠</span>
+              <span class="mp-val">Low</span>
+              <span class="mp-key">Risk</span>
+            </div>
+            <div class="metric-pill">
+              <span class="mp-icon">💤</span>
+              <span class="mp-val">7.2h</span>
+              <span class="mp-key">Sleep</span>
+            </div>
+            <div class="metric-pill">
+              <span class="mp-icon">📚</span>
+              <span class="mp-val">8.4</span>
+              <span class="mp-key">CGPA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ AI SHOWCASE ══════════════ -->
+<section class="showcase-section">
+  <div class="showcase-grid">
+    <div class="showcase-copy">
+      <div class="section-eyebrow">
+        <span class="ey-line"></span>
+        <span class="ey-text">Intelligence Modules</span>
+      </div>
+      <h2 class="section-heading">
+        Four AI engines.<br>
+        <span class="grad-span">One clear picture.</span>
+      </h2>
+      <p class="section-sub">
+        Each module processes a different dimension of your student life —
+        then Nova fuses them into a single predictive intelligence report.
+      </p>
+    </div>
+
+    <div class="showcase-modules">
+      <div class="ai-module mod-cyan">
+        <div class="module-icon">🧠</div>
+        <div class="module-title">Neural Prediction</div>
+        <div class="module-desc">Deep learning risk models trained on thousands of student wellness outcomes.</div>
+      </div>
+      <div class="ai-module mod-violet">
+        <div class="module-icon">📊</div>
+        <div class="module-title">Academic Analyzer</div>
+        <div class="module-desc">CGPA trends, study patterns, and exam performance signals decoded by AI.</div>
+      </div>
+      <div class="ai-module mod-aurora">
+        <div class="module-icon">💤</div>
+        <div class="module-title">Lifestyle Engine</div>
+        <div class="module-desc">Sleep quality, physical activity, and daily routine optimizations.</div>
+      </div>
+      <div class="ai-module mod-pink mod-wide">
+        <div class="module-icon">🔮</div>
+        <div class="module-title">Mental State Monitor</div>
+        <div class="module-desc">Longitudinal mood, stress, and anxiety indicators — turned into actionable insights.</div>
+        <div class="mod-bars">
+          <div class="mod-bar-row">
+            <span class="mod-bar-label">Anxiety Score</span>
+            <div class="mod-bar-track"><div class="mod-bar-fill" style="width:28%;background:var(--aurora);animation-delay:0.4s"></div></div>
+            <span class="mod-bar-pct">28%</span>
+          </div>
+          <div class="mod-bar-row">
+            <span class="mod-bar-label">Stress Level</span>
+            <div class="mod-bar-track"><div class="mod-bar-fill" style="width:42%;background:var(--cyan);animation-delay:0.6s"></div></div>
+            <span class="mod-bar-pct">42%</span>
+          </div>
+          <div class="mod-bar-row">
+            <span class="mod-bar-label">Resilience</span>
+            <div class="mod-bar-track"><div class="mod-bar-fill" style="width:74%;background:var(--violet);animation-delay:0.8s"></div></div>
+            <span class="mod-bar-pct">74%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FEATURES ══════════════ -->
+<section class="features-section">
+  <div class="features-header">
+    <div class="section-eyebrow" style="justify-content:center">
+      <span class="ey-line"></span>
+      <span class="ey-text">Core Capabilities</span>
+      <span class="ey-line"></span>
+    </div>
+    <h2 class="section-heading" style="text-align:center;margin-bottom:10px">
+      Everything you need to<br><span class="grad-span">understand your wellness</span>
+    </h2>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="fc-corner"></div>
+      <div class="fc-icon-ring">🧠</div>
+      <div class="fc-title">AI Prediction</div>
+      <div class="fc-desc">Deep neural networks analyze multi-dimensional student data for precise mental health risk forecasting.</div>
+      <span class="fc-arrow">↗</span>
+    </div>
+    <div class="feature-card">
+      <div class="fc-corner"></div>
+      <div class="fc-icon-ring">📡</div>
+      <div class="fc-title">Wellness Tracking</div>
+      <div class="fc-desc">Real-time monitoring of sleep, mood, stress, and physical activity woven into your wellness score.</div>
+      <span class="fc-arrow">↗</span>
+    </div>
+    <div class="feature-card">
+      <div class="fc-corner"></div>
+      <div class="fc-icon-ring">📊</div>
+      <div class="fc-title">Student Analytics</div>
+      <div class="fc-desc">CGPA trends, attendance patterns, and study efficiency visualized in one intelligent dashboard.</div>
+      <span class="fc-arrow">↗</span>
+    </div>
+    <div class="feature-card">
+      <div class="fc-corner"></div>
+      <div class="fc-icon-ring">🛡️</div>
+      <div class="fc-title">Mental Health Insights</div>
+      <div class="fc-desc">Clinically-informed indicators transformed into clear, personalized guidance — zero jargon.</div>
+      <span class="fc-arrow">↗</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ ANALYTICS PREVIEW ══════════════ -->
+<section class="analytics-section">
+  <div class="analytics-grid">
+    <div>
+      <div class="section-eyebrow">
+        <span class="ey-line"></span>
+        <span class="ey-text">Live Analytics</span>
+      </div>
+      <h2 class="section-heading">
+        Real-time data.<br>
+        <span class="grad-span">Instant clarity.</span>
+      </h2>
+      <p class="section-sub" style="margin-bottom:32px">
+        Nova processes your inputs across four AI engines simultaneously, returning
+        a complete intelligence profile in under 2 seconds.
+      </p>
+      <div class="analytics-cards">
+        <div class="a-card">
+          <div class="a-card-icon" style="background:rgba(0,229,255,0.1)">📈</div>
+          <div class="a-card-body">
+            <div class="a-card-title">Academic Performance</div>
+            <div class="a-card-sub">GPA analysis + trend detection</div>
+          </div>
+          <div class="a-card-badge badge-blue">8.4 CGPA</div>
+        </div>
+        <div class="a-card">
+          <div class="a-card-icon" style="background:rgba(16,255,160,0.1)">🧘</div>
+          <div class="a-card-body">
+            <div class="a-card-title">Stress Assessment</div>
+            <div class="a-card-sub">Current load vs. capacity ratio</div>
+          </div>
+          <div class="a-card-badge badge-green">Low Risk</div>
+        </div>
+        <div class="a-card">
+          <div class="a-card-icon" style="background:rgba(124,58,237,0.15)">💤</div>
+          <div class="a-card-body">
+            <div class="a-card-title">Sleep Quality Index</div>
+            <div class="a-card-sub">Optimal range: 7–9 hrs</div>
+          </div>
+          <div class="a-card-badge badge-violet">7.2 hrs</div>
+        </div>
+        <div class="a-card">
+          <div class="a-card-icon" style="background:rgba(251,191,36,0.1)">⚡</div>
+          <div class="a-card-body">
+            <div class="a-card-title">Engagement Score</div>
+            <div class="a-card-sub">Social + extracurricular activity</div>
+          </div>
+          <div class="a-card-badge badge-amber">High</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analytics-widget">
+      <div class="aw-header">
+        <span class="aw-title">Wellness Over Time</span>
+        <div class="aw-tabs">
+          <span class="aw-tab active">7D</span>
+          <span class="aw-tab">30D</span>
+          <span class="aw-tab">90D</span>
+        </div>
+      </div>
+      <div class="aw-body">
+        <div class="big-chart-wrap">
+          <canvas id="bigChart"></canvas>
+        </div>
+        <div class="aw-stats-row">
+          <div class="aw-stat">
+            <div class="aw-stat-val" style="color:var(--aurora)">72</div>
+            <div class="aw-stat-label">Wellness Score</div>
+          </div>
+          <div class="aw-stat">
+            <div class="aw-stat-val" style="color:var(--cyan)">+8.3%</div>
+            <div class="aw-stat-label">Weekly Gain</div>
+          </div>
+          <div class="aw-stat">
+            <div class="aw-stat-val" style="color:#a78bfa">94%</div>
+            <div class="aw-stat-label">AI Confidence</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ WELLNESS SHOWCASE ══════════════ -->
+<section class="wellness-section">
+  <div class="wellness-grid">
+    <div class="wellness-visual">
+      <!-- Large card -->
+      <div class="w-card large">
+        <div class="w-card-top">
+          <span class="w-card-icon">🧠</span>
+          <span class="w-card-trend trend-up">↑ Improving</span>
+        </div>
+        <div class="w-card-val">Low</div>
+        <div class="w-card-label">Mental Health Risk</div>
+        <div class="w-ring-wrap">
+          <svg class="w-ring-svg" viewBox="0 0 120 120">
+            <defs>
+              <linearGradient id="wGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00e5ff"/>
+                <stop offset="100%" stop-color="#10ffa0"/>
+              </linearGradient>
+            </defs>
+            <circle class="w-ring-track" cx="60" cy="60" r="44" transform="rotate(-90 60 60)"/>
+            <circle class="w-ring-fill" cx="60" cy="60" r="44" transform="rotate(-90 60 60)"/>
+            <text class="w-ring-text" x="60" y="64" text-anchor="middle">72%</text>
+            <text class="w-ring-sub" x="60" y="76" text-anchor="middle">WELLNESS</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="w-card">
+        <div class="w-card-top">
+          <span class="w-card-icon">💤</span>
+          <span class="w-card-trend trend-stable">→ Stable</span>
+        </div>
+        <div class="w-card-val">7.2h</div>
+        <div class="w-card-label">Avg Sleep</div>
+        <div class="w-mini-bar"><div class="w-mini-fill" style="width:72%;background:linear-gradient(90deg,var(--violet),var(--cyan))"></div></div>
+      </div>
+
+      <div class="w-card">
+        <div class="w-card-top">
+          <span class="w-card-icon">📚</span>
+          <span class="w-card-trend trend-up">↑ +0.2</span>
+        </div>
+        <div class="w-card-val">8.4</div>
+        <div class="w-card-label">CGPA</div>
+        <div class="w-mini-bar"><div class="w-mini-fill" style="width:84%;background:linear-gradient(90deg,var(--cyan),var(--aurora))"></div></div>
+      </div>
+
+      <div class="w-card">
+        <div class="w-card-top">
+          <span class="w-card-icon">🏃</span>
+          <span class="w-card-trend trend-warn">⚠ Low</span>
+        </div>
+        <div class="w-card-val">3×</div>
+        <div class="w-card-label">Weekly Activity</div>
+        <div class="w-mini-bar"><div class="w-mini-fill" style="width:42%;background:linear-gradient(90deg,var(--amber),var(--pink))"></div></div>
+      </div>
+    </div>
+
+    <div class="wellness-copy">
+      <div class="section-eyebrow">
+        <span class="ey-line"></span>
+        <span class="ey-text">Student Wellness</span>
+      </div>
+      <h2 class="section-heading">
+        Holistic health,<br>
+        <span class="grad-span">decoded by AI.</span>
+      </h2>
+      <p class="section-sub">
+        Nova doesn't just track a single score — it monitors the interconnected
+        dimensions of your student life and surfaces the insight that matters most.
+      </p>
+      <div class="wellness-points">
+        <div class="w-point">
+          <span class="w-point-icon">🎯</span>
+          <div class="w-point-text">
+            <h4>Personalized Risk Assessment</h4>
+            <p>Dynamic thresholds trained on student population data, not generic benchmarks.</p>
+          </div>
+        </div>
+        <div class="w-point">
+          <span class="w-point-icon">🔄</span>
+          <div class="w-point-text">
+            <h4>Continuous Learning</h4>
+            <p>Each assessment refines the model — accuracy improves with every student interaction.</p>
+          </div>
+        </div>
+        <div class="w-point">
+          <span class="w-point-icon">🛡️</span>
+          <div class="w-point-text">
+            <h4>Zero Data Retention</h4>
+            <p>Your responses never leave the session. No storage, no tracking, no compromise.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CTA ══════════════ -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="grid-decoration"></div>
+    <div class="cta-badge">✦ Free Assessment</div>
+    <h2 class="cta-heading">
+      Ready to understand<br>
+      <span class="glow-word">your wellness?</span>
+    </h2>
+    <p class="cta-sub">
+      Join thousands of students who've used Nova AI to gain clarity on their
+      mental health, academic performance, and overall wellbeing.
+    </p>
+    <div class="cta-buttons">
+      <a href="/predict" class="btn-cta-main">
+        <span>✦</span>
+        Start AI Assessment
+        <span>→</span>
+      </a>
+      <a href="/dashboard" class="btn-cta-outline">
+        View Sample Report ↗
+      </a>
+    </div>
+    <div class="cta-note">No account required · Results in under 2 seconds · 100% confidential</div>
+  </div>
+</section>
+
+<!-- ══════════════ SCRIPTS ══════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+/* ─── Canvas Particle Field ─────────────────── */
+(function(){
+  const canvas = document.getElementById('novaCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes = [];
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const N = 60;
+  for(let i = 0; i < N; i++){
+    nodes.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      r: Math.random() * 1.8 + 0.4,
+      alpha: Math.random() * 0.5 + 0.15,
+      hue: Math.random() < 0.5 ? 195 : 270  /* cyan vs violet */
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    /* draw lines between near nodes */
+    for(let i = 0; i < N; i++){
+      for(let j = i + 1; j < N; j++){
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if(d < 130){
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = `rgba(124,58,237,${0.08 * (1 - d/130)})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+    /* draw dots */
+    nodes.forEach(n => {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${n.hue},90%,70%,${n.alpha})`;
+      ctx.fill();
+      n.x += n.vx; n.y += n.vy;
+      if(n.x < 0 || n.x > W) n.vx *= -1;
+      if(n.y < 0 || n.y > H) n.vy *= -1;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ─── Sparkline Chart (hero) ─────────────── */
+(function(){
+  const el = document.getElementById('sparklineHero');
+  if(!el) return;
+  const ctx = el.getContext('2d');
+  const data = [58, 62, 59, 66, 68, 64, 72];
+  const grad = ctx.createLinearGradient(0, 0, 0, 48);
+  grad.addColorStop(0, 'rgba(0,229,255,0.3)');
+  grad.addColorStop(1, 'rgba(0,229,255,0)');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets: [{
+        data,
+        borderColor: '#00e5ff',
+        borderWidth: 2,
+        fill: true,
+        backgroundColor: grad,
+        tension: 0.45,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: '#00e5ff',
+      }]
+    },
+    options: {
+      responsive: false,
+      plugins: { legend: { display: false }, tooltip: { enabled: true } },
+      scales: {
+        x: { display: false },
+        y: { display: false, min: 50, max: 80 }
+      },
+      animation: { duration: 1200, easing: 'easeInOutCubic' }
+    }
+  });
+})();
+
+/* ─── Big Analytics Chart ─────────────────── */
+(function(){
+  const el = document.getElementById('bigChart');
+  if(!el) return;
+  const ctx = el.getContext('2d');
+  const labels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const wellnessData = [60, 64, 61, 67, 70, 68, 72];
+  const academicData = [75, 76, 74, 78, 80, 79, 82];
+
+  const grad1 = ctx.createLinearGradient(0, 0, 0, 180);
+  grad1.addColorStop(0, 'rgba(0,229,255,0.2)');
+  grad1.addColorStop(1, 'rgba(0,229,255,0)');
+
+  const grad2 = ctx.createLinearGradient(0, 0, 0, 180);
+  grad2.addColorStop(0, 'rgba(124,58,237,0.2)');
+  grad2.addColorStop(1, 'rgba(124,58,237,0)');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Wellness',
+          data: wellnessData,
+          borderColor: '#00e5ff',
+          borderWidth: 2,
+          fill: true,
+          backgroundColor: grad1,
+          tension: 0.45,
+          pointRadius: 3,
+          pointBackgroundColor: '#00e5ff',
+          pointBorderColor: '#0d1421',
+          pointBorderWidth: 2,
+        },
+        {
+          label: 'Academic',
+          data: academicData,
+          borderColor: '#7c3aed',
+          borderWidth: 2,
+          fill: true,
+          backgroundColor: grad2,
+          tension: 0.45,
+          pointRadius: 3,
+          pointBackgroundColor: '#7c3aed',
+          pointBorderColor: '#0d1421',
+          pointBorderWidth: 2,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: '#8a9bc4',
+            usePointStyle: true,
+            pointStyleWidth: 8,
+            font: { size: 11, family: 'DM Sans' }
+          }
+        },
+        tooltip: {
+          backgroundColor: '#0d1421',
+          borderColor: 'rgba(255,255,255,0.08)',
+          borderWidth: 1,
+          titleColor: '#f0f4ff',
+          bodyColor: '#8a9bc4',
+          padding: 10,
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#3d4f6b', font: { size: 10 } }
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#3d4f6b', font: { size: 10 } },
+          min: 50, max: 90
+        }
+      },
+      animation: { duration: 1600, easing: 'easeInOutQuart' }
+    }
+  });
+
+  /* Tab switching */
+  const datasets7d  = { wellness: [60,64,61,67,70,68,72], academic: [75,76,74,78,80,79,82] };
+  const datasets30d = { wellness: [55,58,56,62,65,63,68,70,72,69,73,75,71,74,76,73,77,75,79,76,80,78,81,79,82,80,83,81,84,82], academic: [72,73,71,75,77,76,78,79,80,78,81,82,80,83,84,82,85,84,86,84,87,85,87,86,88,87,88,87,89,88] };
+
+  document.querySelectorAll('.aw-tab').forEach(tab => {
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.aw-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+})();
+
+/* ─── Intersection Observer for bar animations ─ */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.querySelectorAll('.meta-bar, .mod-bar-fill, .w-mini-fill').forEach(bar => {
+        bar.style.animationPlayState = 'running';
+      });
+    }
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.dash-body, .ai-module, .w-card').forEach(el => {
+  el.querySelectorAll('.meta-bar, .mod-bar-fill').forEach(bar => {
+    bar.style.animationPlayState = 'paused';
+  });
+  observer.observe(el);
+});
+</script>
+
+{% endblock %}

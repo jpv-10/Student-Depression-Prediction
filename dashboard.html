@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Nova AI{% endblock %}
+{% block content %}
+
+<div class="dashboard-page">
+
+  <!-- Dashboard Header -->
+  <div class="dash-header">
+    <div>
+      <div class="dash-badge"><span class="badge-dot"></span> Live Analytics</div>
+      <h1 class="dash-title">AI <span class="gradient-text">Dashboard</span></h1>
+      <p class="dash-sub">Real-time wellness intelligence & trend analysis</p>
+    </div>
+    <div class="dash-header-actions">
+      <div class="dash-time" id="dashTime"></div>
+      <a href="/predict" class="btn-nova btn-sm">+ New Assessment</a>
+    </div>
+  </div>
+
+  <!-- Top Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="card-glow"></div>
+      <div class="stat-icon">📊</div>
+      <div class="stat-info">
+        <div class="stat-value" data-target="{{ stats.total }}">0</div>
+        <div class="stat-key">Total Assessments</div>
+        <div class="stat-trend up">↑ 12% this week</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="card-glow"></div>
+      <div class="stat-icon">⚠️</div>
+      <div class="stat-info">
+        <div class="stat-value" data-target="{{ stats.high }}">0</div>
+        <div class="stat-key">High Risk Cases</div>
+        <div class="stat-trend down">↓ 5% improvement</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="card-glow"></div>
+      <div class="stat-icon">✅</div>
+      <div class="stat-info">
+        <div class="stat-value" data-target="{{ stats.low }}">0</div>
+        <div class="stat-key">Wellness Score Avg</div>
+        <div class="stat-trend up">↑ 3 pts increase</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="card-glow"></div>
+      <div class="stat-icon">🎯</div>
+      <div class="stat-info">
+        <div class="stat-value" data-target="{{ stats.moderate }}">0</div>
+        <div class="stat-key">AI Accuracy %</div>
+        <div class="stat-trend neutral">Stable</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-row">
+
+    <!-- Stress Analysis -->
+    <div class="chart-card">
+      <div class="card-glow"></div>
+      <div class="chart-card-header">
+        <h3>Stress Level Distribution</h3>
+        <div class="chart-legend">
+          <span class="legend-dot" style="background:#a855f7"></span> High
+          <span class="legend-dot" style="background:#06b6d4"></span> Low
+        </div>
+      </div>
+      <canvas id="stressChart" height="200"></canvas>
+    </div>
+
+    <!-- Sleep Analysis -->
+    <div class="chart-card">
+      <div class="card-glow"></div>
+      <div class="chart-card-header">
+        <h3>Sleep Duration Analysis</h3>
+        <div class="chart-legend">
+          <span class="legend-dot" style="background:#10b981"></span> Healthy
+        </div>
+      </div>
+      <canvas id="sleepChart" height="200"></canvas>
+    </div>
+
+  </div>
+
+  <!-- Risk Trend + Wellness -->
+  <div class="charts-row">
+
+    <!-- Risk Trend -->
+    <div class="chart-card chart-wide">
+      <div class="card-glow"></div>
+      <div class="chart-card-header">
+        <h3>Risk Trend — Last 7 Days</h3>
+        <span class="chart-live-badge"><span class="live-dot"></span> Live</span>
+      </div>
+      <canvas id="riskTrendChart" height="180"></canvas>
+    </div>
+
+    <!-- Wellness Donut -->
+    <div class="chart-card">
+      <div class="card-glow"></div>
+      <div class="chart-card-header">
+        <h3>Wellness Distribution</h3>
+      </div>
+      <canvas id="wellnessDonut" height="200"></canvas>
+      <div class="donut-legend">
+        <div class="dl-item"><span style="background:#10b981"></span>Low Risk (54%)</div>
+        <div class="dl-item"><span style="background:#f59e0b"></span>Moderate (31%)</div>
+        <div class="dl-item"><span style="background:#ef4444"></span>High Risk (15%)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Recent Assessments Table -->
+  <div class="table-card">
+    <div class="card-glow"></div>
+    <div class="table-header">
+      <h3>Recent Assessments</h3>
+      <span class="table-count">Showing last 5</span>
+    </div>
+    <div class="table-wrap">
+      <table class="nova-table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Risk Level</th>
+            <th>Wellness Score</th>
+            <th>AI Confidence</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+   <tbody>
+
+{% if history %}
+
+  {% for item in history[:5] %}
+
+  <tr class="table-row">
+
+    <td class="student-cell">
+      <span class="student-avatar">
+        {{ item.student_name[0] if item.student_name else 'S' }}
+      </span>
+
+      {{ item.student_name if item.student_name else 'Student' }}
+    </td>
+
+    <td>
+      <span class="risk-badge risk-{{ item.risk_level|lower }}">
+        {{ item.risk_level }}
+      </span>
+    </td>
+
+    <td>
+      <div class="mini-progress-wrap">
+        <div
+          class="mini-progress"
+          style="width:{{ item.risk_percent }}%;
+          background:
+          {% if item.risk_level == 'Low' %}
+          #10b981
+          {% elif item.risk_level == 'Moderate' %}
+          #f59e0b
+          {% else %}
+          #ef4444
+          {% endif %}"
+        ></div>
+      </div>
+
+      <span class="mini-val">
+        {{ item.risk_percent }}%
+      </span>
+    </td>
+
+    <td class="conf-cell">
+      {{ item.confidence }}%
+    </td>
+
+    <td class="time-cell">
+      {{ item.timestamp }}
+    </td>
+
+    <td>
+      <span class="status-badge
+      {% if item.risk_level == 'High' %}
+      status-flag
+      {% else %}
+      status-ok
+      {% endif %}">
+        {% if item.risk_level == 'High' %}
+        Attention
+        {% else %}
+        Stable
+        {% endif %}
+      </span>
+    </td>
+
+  </tr>
+
+  {% endfor %}
+
+{% else %}
+
+<tr>
+  <td colspan="6" style="text-align:center;padding:40px;">
+    No assessments yet.
+  </td>
+</tr>
+
+{% endif %}
+
+</tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// Live clock
+function updateClock(){
+  document.getElementById('dashTime').textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(updateClock,1000); updateClock();
+
+// Animated counters
+document.querySelectorAll('.stat-value[data-target]').forEach(el=>{
+  const target = +el.dataset.target;
+  let cur = 0;
+  const step = target/60;
+  const t = setInterval(()=>{
+    cur = Math.min(cur+step,target);
+    el.textContent = Math.floor(cur);
+    if(cur>=target) clearInterval(t);
+  },20);
+});
+
+const glassStyle = {
+  color:'rgba(226,232,240,0.85)',
+  gridColor:'rgba(255,255,255,0.06)',
+  font: { family:'monospace', size:11 }
+};
+
+Chart.defaults.color = glassStyle.color;
+
+// Stress Chart
+new Chart(document.getElementById('stressChart'),{
+  type:'bar',
+  data:{
+    labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    datasets:[{
+      label:'High Stress',
+      data:[12,19,8,15,11,7,14],
+      backgroundColor:'rgba(168,85,247,0.7)',
+      borderRadius:6,
+      borderColor:'#a855f7',
+      borderWidth:1
+    },{
+      label:'Low Stress',
+      data:[25,30,22,28,35,40,26],
+      backgroundColor:'rgba(6,182,212,0.5)',
+      borderRadius:6,
+      borderColor:'#06b6d4',
+      borderWidth:1
+    }]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:glassStyle.gridColor}},
+      y:{grid:{color:glassStyle.gridColor},beginAtZero:true}
+    }
+  }
+});
+
+// Sleep Chart
+new Chart(document.getElementById('sleepChart'),{
+  type:'line',
+  data:{
+    labels:['<5h','5-6h','7-8h','>8h'],
+    datasets:[{
+      label:'Students',
+      data:[18,35,62,22],
+      borderColor:'#10b981',
+      backgroundColor:'rgba(16,185,129,0.15)',
+      tension:0.4,
+      fill:true,
+      pointBackgroundColor:'#10b981',
+      pointRadius:5
+    }]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:glassStyle.gridColor}},
+      y:{grid:{color:glassStyle.gridColor},beginAtZero:true}
+    }
+  }
+});
+
+// Risk Trend
+new Chart(document.getElementById('riskTrendChart'),{
+  type:'line',
+  data:{
+    labels:['Day 1','Day 2','Day 3','Day 4','Day 5','Day 6','Today'],
+    datasets:[{
+      label:'High Risk',
+      data:[22,25,18,30,15,20,16],
+      borderColor:'#ef4444',
+      backgroundColor:'rgba(239,68,68,0.1)',
+      tension:0.4,fill:true,
+      pointBackgroundColor:'#ef4444',pointRadius:5
+    },{
+      label:'Low Risk',
+      data:[45,50,55,42,60,58,62],
+      borderColor:'#10b981',
+      backgroundColor:'rgba(16,185,129,0.1)',
+      tension:0.4,fill:true,
+      pointBackgroundColor:'#10b981',pointRadius:5
+    }]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{labels:{color:'rgba(226,232,240,0.7)',font:{size:11}}}},
+    scales:{
+      x:{grid:{color:glassStyle.gridColor}},
+      y:{grid:{color:glassStyle.gridColor},beginAtZero:true}
+    }
+  }
+});
+
+// Wellness Donut
+new Chart(document.getElementById('wellnessDonut'),{
+  type:'doughnut',
+  data:{
+    labels:['Low Risk','Moderate','High Risk'],
+    datasets:[{
+      data:[54,31,15],
+      backgroundColor:['rgba(16,185,129,0.8)','rgba(245,158,11,0.8)','rgba(239,68,68,0.8)'],
+      borderColor:['#10b981','#f59e0b','#ef4444'],
+      borderWidth:2,
+      hoverOffset:8
+    }]
+  },
+  options:{
+    responsive:true,
+    cutout:'72%',
+    plugins:{legend:{display:false}}
+  }
+});
+</script>
+{% endblock %}

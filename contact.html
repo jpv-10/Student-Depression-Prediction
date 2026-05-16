@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+{% block title %}Contact{% endblock %}
+{% block body_class %}page--contact{% endblock %}
+
+{% block content %}
+
+<header class="page-header">
+    <div class="page-header__inner">
+        <span class="page-header__tag">
+            <i class="ph ph-envelope-simple" aria-hidden="true"></i> Get in Touch
+        </span>
+        <h1 class="page-header__title">Contact &amp; <em>Feedback</em></h1>
+        <p class="page-header__sub">
+            Questions, feedback, or suggestions? We'd love to hear from you.
+        </p>
+    </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CONTACT LAYOUT
+══════════════════════════════════════════════════════════════════ -->
+<div class="contact-layout">
+
+    <!-- Left: Contact Info Cards -->
+    <aside class="contact-info" aria-label="Contact information">
+
+        <div class="contact-card glass-card">
+            <div class="contact-card__icon contact-card__icon--purple" aria-hidden="true">
+                <i class="ph ph-envelope-open"></i>
+            </div>
+            <h2 class="contact-card__title">Email Us</h2>
+            <p class="contact-card__body">For research enquiries and partnership opportunities.</p>
+            <a href="mailto:hello@deprisense.ai" class="contact-card__link">
+                hello@deprisense.ai
+            </a>
+        </div>
+
+        <div class="contact-card glass-card">
+            <div class="contact-card__icon contact-card__icon--pink" aria-hidden="true">
+                <i class="ph ph-github-logo"></i>
+            </div>
+            <h2 class="contact-card__title">Open Source</h2>
+            <p class="contact-card__body">View the source code, contribute, or report issues on GitHub.</p>
+            <a href="https://github.com/deprisense" class="contact-card__link" target="_blank" rel="noopener noreferrer">
+                github.com/deprisense
+            </a>
+        </div>
+
+        <div class="contact-card glass-card">
+            <div class="contact-card__icon contact-card__icon--blue" aria-hidden="true">
+                <i class="ph ph-first-aid-kit"></i>
+            </div>
+            <h2 class="contact-card__title">Crisis Resources</h2>
+            <p class="contact-card__body">If you need immediate mental health support, please reach out now.</p>
+            <div class="contact-card__crisis-list">
+                <p><strong>iCall (India):</strong> 9152987821</p>
+                <p><strong>Vandrevala:</strong> 1860-2662-345</p>
+                <p><strong>NIMHANS:</strong> 080-46110007</p>
+            </div>
+        </div>
+
+        <!-- Social Icons -->
+        <div class="contact-socials glass-card" aria-label="Social media links">
+            <h3 class="contact-socials__title">Connect With Us</h3>
+            <div class="contact-socials__icons">
+                <a href="#" class="social-icon social-icon--twitter" aria-label="Follow on Twitter / X" rel="noopener noreferrer" target="_blank">
+                    <i class="ph ph-x-logo" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="social-icon social-icon--linkedin" aria-label="Connect on LinkedIn" rel="noopener noreferrer" target="_blank">
+                    <i class="ph ph-linkedin-logo" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="social-icon social-icon--github" aria-label="View on GitHub" rel="noopener noreferrer" target="_blank">
+                    <i class="ph ph-github-logo" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="social-icon social-icon--instagram" aria-label="Follow on Instagram" rel="noopener noreferrer" target="_blank">
+                    <i class="ph ph-instagram-logo" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- Right: Contact Form -->
+    <section class="contact-form-section" aria-labelledby="form-heading">
+        <div class="contact-form-card glass-card">
+            <header class="contact-form-card__header">
+                <h2 class="contact-form-card__title" id="form-heading">
+                    Send a <em>Message</em>
+                </h2>
+                <p class="contact-form-card__sub">
+                    We typically respond within 24–48 hours.
+                </p>
+            </header>
+
+            <form class="contact-form"
+                  method="POST"
+                  action="{{ url_for('contact') }}"
+                  novalidate
+                  aria-label="Contact form">
+
+                <!-- Name -->
+                <div class="form-field">
+                    <label class="form-field__label" for="contact-name">
+                        Full Name <span class="form-field__required" aria-label="required">*</span>
+                    </label>
+                    <div class="form-field__input-wrap">
+                        <i class="ph ph-user form-field__icon" aria-hidden="true"></i>
+                        <input class="form-field__input"
+                               type="text"
+                               id="contact-name"
+                               name="name"
+                               placeholder="Jane Doe"
+                               required
+                               autocomplete="name"
+                               aria-describedby="name-err" />
+                    </div>
+                    <span class="form-field__error" id="name-err" role="alert"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="form-field">
+                    <label class="form-field__label" for="contact-email">
+                        Email Address <span class="form-field__required" aria-label="required">*</span>
+                    </label>
+                    <div class="form-field__input-wrap">
+                        <i class="ph ph-envelope-simple form-field__icon" aria-hidden="true"></i>
+                        <input class="form-field__input"
+                               type="email"
+                               id="contact-email"
+                               name="email"
+                               placeholder="jane@example.com"
+                               required
+                               autocomplete="email"
+                               aria-describedby="email-err" />
+                    </div>
+                    <span class="form-field__error" id="email-err" role="alert"></span>
+                </div>
+
+                <!-- Subject -->
+                <div class="form-field">
+                    <label class="form-field__label" for="contact-subject">Subject</label>
+                    <div class="form-field__input-wrap form-field__input-wrap--select">
+                        <i class="ph ph-tag form-field__icon" aria-hidden="true"></i>
+                        <select class="form-field__input form-field__input--select"
+                                id="contact-subject"
+                                name="subject">
+                            <option value="general">General Enquiry</option>
+                            <option value="feedback">Platform Feedback</option>
+                            <option value="research">Research Collaboration</option>
+                            <option value="bug">Bug Report</option>
+                            <option value="crisis">Crisis Support (non-emergency)</option>
+                        </select>
+                        <i class="ph ph-caret-down form-field__caret" aria-hidden="true"></i>
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <div class="form-field form-field--full">
+                    <label class="form-field__label" for="contact-message">
+                        Message <span class="form-field__required" aria-label="required">*</span>
+                    </label>
+                    <div class="form-field__input-wrap form-field__input-wrap--textarea">
+                        <i class="ph ph-chat-text form-field__icon form-field__icon--top" aria-hidden="true"></i>
+                        <textarea class="form-field__input form-field__input--textarea"
+                                  id="contact-message"
+                                  name="message"
+                                  rows="6"
+                                  placeholder="Tell us how we can help..."
+                                  required
+                                  minlength="10"
+                                  aria-describedby="msg-err msg-counter"></textarea>
+                    </div>
+                    <div class="form-field__footer">
+                        <span class="form-field__error" id="msg-err" role="alert"></span>
+                        <span class="form-field__counter" id="msg-counter" aria-live="polite">0 / 1000</span>
+                    </div>
+                </div>
+
+                <!-- Privacy consent -->
+                <div class="form-field form-field--checkbox">
+                    <label class="checkbox-label">
+                        <input class="checkbox-label__input"
+                               type="checkbox"
+                               name="consent"
+                               required
+                               aria-describedby="consent-text" />
+                        <span class="checkbox-label__box" aria-hidden="true"></span>
+                        <span class="checkbox-label__text" id="consent-text">
+                            I understand this message is for educational platform feedback only
+                            and does not constitute mental health consultation.
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Submit -->
+                <div class="contact-form__actions">
+                    <button type="submit" class="btn btn--neon btn--lg">
+                        <i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>
+                        Send Message
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+</div><!-- /.contact-layout -->
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FAQ SECTION
+══════════════════════════════════════════════════════════════════ -->
+<section class="faq-section" aria-labelledby="faq-heading">
+    <header class="section-header">
+        <span class="section-header__tag">
+            <i class="ph ph-question" aria-hidden="true"></i> FAQ
+        </span>
+        <h2 class="section-header__title" id="faq-heading">
+            Frequently Asked <em>Questions</em>
+        </h2>
+    </header>
+
+    <dl class="faq-list glass-card">
+
+        <div class="faq-item" id="faq-1">
+            <dt class="faq-item__q">
+                <button class="faq-item__btn"
+                        aria-expanded="false"
+                        aria-controls="faq-1-ans">
+                    Is my data stored or shared?
+                    <i class="ph ph-caret-down faq-item__icon" aria-hidden="true"></i>
+                </button>
+            </dt>
+            <dd class="faq-item__a" id="faq-1-ans" hidden>
+                No. All assessment data is processed entirely within your browser session using Flask's
+                server-side session mechanism. Nothing is written to a database or transmitted to third parties.
+                Data is lost when you close your browser.
+            </dd>
+        </div>
+
+        <div class="faq-item" id="faq-2">
+            <dt class="faq-item__q">
+                <button class="faq-item__btn"
+                        aria-expanded="false"
+                        aria-controls="faq-2-ans">
+                    Can this replace a professional diagnosis?
+                    <i class="ph ph-caret-down faq-item__icon" aria-hidden="true"></i>
+                </button>
+            </dt>
+            <dd class="faq-item__a" id="faq-2-ans" hidden>
+                Absolutely not. DepriSense is an educational tool built on academic research. Its
+                predictions are probabilistic estimates, not clinical diagnoses. Please always consult
+                a qualified mental health professional for any concerns about your wellbeing.
+            </dd>
+        </div>
+
+        <div class="faq-item" id="faq-3">
+            <dt class="faq-item__q">
+                <button class="faq-item__btn"
+                        aria-expanded="false"
+                        aria-controls="faq-3-ans">
+                    What does "Demo Mode" mean?
+                    <i class="ph ph-caret-down faq-item__icon" aria-hidden="true"></i>
+                </button>
+            </dt>
+            <dd class="faq-item__a" id="faq-3-ans" hidden>
+                Demo Mode activates when the trained model file (student_depression_model.pkl) is not
+                found. The system falls back to a weighted heuristic algorithm for demonstration purposes.
+                Accuracy in demo mode is significantly lower than the trained ML model.
+            </dd>
+        </div>
+
+        <div class="faq-item" id="faq-4">
+            <dt class="faq-item__q">
+                <button class="faq-item__btn"
+                        aria-expanded="false"
+                        aria-controls="faq-4-ans">
+                    How do I contribute to the project?
+                    <i class="ph ph-caret-down faq-item__icon" aria-hidden="true"></i>
+                </button>
+            </dt>
+            <dd class="faq-item__a" id="faq-4-ans" hidden>
+                Visit our GitHub repository to open issues, submit pull requests, or discuss feature
+                ideas. We welcome contributions in data science, frontend design, accessibility improvements,
+                and mental health content review.
+            </dd>
+        </div>
+
+    </dl>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════════════ -->
+<footer class="site-footer" role="contentinfo">
+    <div class="site-footer__inner">
+
+        <div class="site-footer__brand">
+            <a href="{{ url_for('index') }}" class="site-footer__logo" aria-label="DepriSense home">
+                <i class="ph ph-brain" aria-hidden="true"></i>
+                <span>Depri<em>Sense</em></span>
+            </a>
+            <p class="site-footer__tagline">
+                AI-powered mental health prediction for student wellbeing.
+            </p>
+        </div>
+
+        <nav class="site-footer__nav" aria-label="Footer navigation">
+            <h3 class="site-footer__nav-title">Platform</h3>
+            <ul role="list">
+                {% for link in nav_links %}
+                <li><a href="{{ url_for(link.endpoint) }}">{{ link.label }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+
+        <div class="site-footer__legal">
+            <p class="site-footer__disclaimer">
+                ⚠️ This tool is for <strong>educational purposes only</strong> and does not constitute
+                medical advice. If you are in crisis, please contact a mental health professional immediately.
+            </p>
+            <p class="site-footer__copy">
+                &copy; {{ current_year }} DepriSense &nbsp;·&nbsp; v{{ app_version }} &nbsp;·&nbsp;
+                Built with <i class="ph ph-heart" aria-hidden="true"></i> &amp; Python
+            </p>
+        </div>
+
+    </div>
+</footer>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/contact.js') }}"></script>
+{% endblock %}

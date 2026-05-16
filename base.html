@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DepriSense AI - Futuristic Student Depression Risk Prediction Platform">
+  <title>{% block title %}DepriSense AI{% endblock %}</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ui_overrides.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nova-predict.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nova-dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nova-landing.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nova-report.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nova-sidebar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nova-animations.css') }}">
+  {% block extra_css %}{% endblock %}
+
+  <style>
+    /* ==============================
+       PREMIUM SIDEBAR — CSS
+       ============================== */
+
+    :root {
+      --sb-width: 256px;
+      --sb-collapsed: 72px;
+      --sb-transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      --sb-bg: rgba(8, 10, 22, 0.88);
+      --sb-border: rgba(99, 120, 255, 0.15);
+      --sb-border-glow: rgba(99, 120, 255, 0.45);
+      --accent: #6378ff;
+      --accent-dim: rgba(99, 120, 255, 0.12);
+      --accent-glow: rgba(99, 120, 255, 0.28);
+      --accent2: #a78bfa;
+      --text-primary: #f0f4ff;
+      --text-muted: rgba(160, 170, 210, 0.68);
+      --text-section: rgba(99, 120, 255, 0.5);
+      --nav-hover-bg: rgba(99, 120, 255, 0.08);
+      --nav-active-bg: rgba(99, 120, 255, 0.14);
+    }
+
+    /* ── Shell ── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      width: var(--sb-width);
+      background: var(--sb-bg);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border-right: 1px solid var(--sb-border);
+      box-shadow: 4px 0 48px rgba(0,0,0,0.45), inset -1px 0 0 rgba(99,120,255,0.07);
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+      transition: width var(--sb-transition), transform var(--sb-transition);
+      overflow: hidden;
+    }
+
+    /* Animated glow edge */
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      top: 8%; left: 0;
+      width: 1px; height: 84%;
+      background: linear-gradient(180deg,
+        transparent 0%,
+        var(--sb-border-glow) 25%,
+        var(--accent) 50%,
+        var(--sb-border-glow) 75%,
+        transparent 100%);
+      opacity: 0.55;
+      animation: sbShimmer 5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes sbShimmer {
+      0%,100% { opacity: 0.25; transform: scaleY(0.75); }
+      50%      { opacity: 0.7;  transform: scaleY(1); }
+    }
+
+    /* ── Collapsed ── */
+    .sidebar.collapsed { width: var(--sb-collapsed); }
+
+    .sidebar.collapsed .logo-text,
+    .sidebar.collapsed .nav-label,
+    .sidebar.collapsed .nav-section-label,
+    .sidebar.collapsed .status-text,
+    .sidebar.collapsed .version-tag,
+    .sidebar.collapsed .sidebar-divider {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .sidebar.collapsed .sidebar-top     { justify-content: center; padding: 20px 0; }
+    .sidebar.collapsed .logo            { justify-content: center; gap: 0; }
+    .sidebar.collapsed .nav-item        { justify-content: center; padding: 13px 0; }
+    .sidebar.collapsed .nav-section-label { display: none; }
+    .sidebar.collapsed .sidebar-footer  { align-items: center; padding: 16px 0; }
+    .sidebar.collapsed .model-status    { justify-content: center; }
+
+    /* ── Collapse toggle btn ── */
+    .sidebar-collapse-btn {
+      position: absolute;
+      top: 26px; right: -13px;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: #0b0e20;
+      border: 1px solid var(--sb-border-glow);
+      color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      z-index: 20;
+      transition: all 0.22s ease;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+    .sidebar-collapse-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 18px var(--accent);
+      transform: scale(1.12);
+    }
+    .sidebar-collapse-btn i             { transition: transform var(--sb-transition); }
+    .sidebar.collapsed .sidebar-collapse-btn i { transform: rotate(180deg); }
+
+    /* ── Top / Logo ── */
+    .sidebar-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 18px 16px;
+      flex-shrink: 0;
+      transition: padding var(--sb-transition), justify-content var(--sb-transition);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .logo-icon {
+      position: relative;
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1b2048, #0d1030);
+      border: 1px solid var(--sb-border-glow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      color: var(--accent);
+      flex-shrink: 0;
+      transition: box-shadow 0.3s, border-color 0.3s;
+      box-shadow: 0 0 14px var(--accent-glow);
+    }
+    .logo:hover .logo-icon {
+      box-shadow: 0 0 26px var(--accent), 0 0 44px rgba(99,120,255,0.18);
+      border-color: var(--accent);
+    }
+    .logo-icon-glow {
+      position: absolute; inset: -5px;
+      border-radius: 17px;
+      background: radial-gradient(circle, var(--accent-glow), transparent 68%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .logo:hover .logo-icon-glow { opacity: 1; }
+
+    .logo-text {
+      overflow: hidden;
+      transition: opacity var(--sb-transition), width var(--sb-transition);
+      white-space: nowrap;
+    }
+    .logo-text h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 0.025em;
+      line-height: 1.2;
+      margin: 0;
+    }
+    .logo-text span {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── Section label ── */
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--text-section);
+      padding: 2px 20px 8px;
+      white-space: nowrap;
+      transition: opacity var(--sb-transition);
+      flex-shrink: 0;
+    }
+
+    /* ── Nav ── */
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      padding: 0 8px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+    }
+    .sidebar-nav::-webkit-scrollbar { display: none; }
+
+    .nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 13.5px;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .nav-item:hover {
+      background: var(--nav-hover-bg);
+      color: var(--text-primary);
+      transform: translateX(3px);
+    }
+    .nav-item:hover .nav-icon { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+
+    .nav-item.active {
+      background: var(--nav-active-bg);
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      border: 1px solid rgba(99,120,255,0.22);
+      pointer-events: none;
+    }
+    .nav-item.active .nav-icon {
+      color: var(--accent);
+      filter: drop-shadow(0 0 5px var(--accent));
+    }
+
+    /* Active glow bar */
+    .nav-active-bar {
+      position: absolute;
+      left: 0; top: 18%; bottom: 18%;
+      width: 3px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, var(--accent2), var(--accent));
+      opacity: 0;
+      transition: opacity 0.2s;
+      box-shadow: 0 0 8px var(--accent);
+      pointer-events: none;
+    }
+    .nav-item.active .nav-active-bar { opacity: 1; }
+
+    .nav-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px;
+      font-size: 20px;
+      flex-shrink: 0;
+      transition: color 0.2s, filter 0.2s, text-shadow 0.2s;
+    }
+    .nav-label {
+      transition: opacity var(--sb-transition), width var(--sb-transition);
+      white-space: nowrap;
+    }
+
+    /* Tooltip when collapsed */
+    .sidebar.collapsed .nav-item[data-tooltip]:hover::before {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: calc(var(--sb-collapsed) + 2px);
+      top: 50%; transform: translateY(-50%);
+      background: #0b0e20;
+      border: 1px solid var(--sb-border-glow);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      padding: 6px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      z-index: 9999;
+      box-shadow: 0 0 16px var(--accent-glow);
+      pointer-events: none;
+    }
+
+    /* ── Divider ── */
+    .sidebar-divider {
+      height: 1px;
+      margin: 10px 16px;
+      background: linear-gradient(90deg, transparent, var(--sb-border), transparent);
+      flex-shrink: 0;
+      transition: opacity var(--sb-transition);
+    }
+
+    /* ── Footer ── */
+    .sidebar-footer {
+      padding: 12px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+      transition: padding var(--sb-transition), align-items var(--sb-transition);
+    }
+
+    .model-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      padding: 7px 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.055);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .model-status.active { color: #34d399; }
+    .model-status.demo   { color: #f59e0b; }
+
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: sbPulse 2.2s ease-in-out infinite;
+    }
+    .model-status.active .status-dot { background: #34d399; box-shadow: 0 0 6px #34d399; }
+    .model-status.demo   .status-dot { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+
+    @keyframes sbPulse {
+      0%,100% { transform: scale(1);   opacity: 1; }
+      50%      { transform: scale(1.35); opacity: 0.65; }
+    }
+
+    .version-tag {
+      font-size: 10px;
+      color: var(--text-section);
+      padding-left: 10px;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.05em;
+      margin: 0;
+    }
+
+    /* ── Mobile close ── */
+    .mobile-close {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+    .mobile-close:hover { color: var(--text-primary); }
+
+    /* ── Mobile overlay ── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(3px);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.active { display: block; opacity: 1; }
+
+    /* ── Main wrapper offset ── */
+    .main-wrapper {
+      margin-left: var(--sb-width);
+      transition: margin-left var(--sb-transition);
+    }
+    .sidebar.collapsed ~ .main-wrapper {
+      margin-left: var(--sb-collapsed);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: var(--sb-width) !important;
+        box-shadow: 8px 0 48px rgba(0,0,0,0.6);
+      }
+      .sidebar.mobile-open    { transform: translateX(0); }
+      .sidebar-collapse-btn   { display: none; }
+      .mobile-close           { display: flex; }
+      .main-wrapper           { margin-left: 0 !important; }
+      .sidebar-overlay        { display: block; }
+    }
+
+    /* ── Ripple keyframe ── */
+    @keyframes sbRipple { to { transform: scale(2.5); opacity: 0; } }
+  </style>
+</head>
+
+<body>
+
+  <!-- ========================= -->
+  <!-- Animated Background       -->
+  <!-- ========================= -->
+  <div class="gradient-bg"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- ========================= -->
+  <!-- PREMIUM SIDEBAR           -->
+  <!-- ========================= -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Collapse toggle (desktop) -->
+    <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" aria-label="Toggle sidebar">
+      <i class="ph ph-caret-left"></i>
+    </button>
+
+    <!-- Top / Logo -->
+    <div class="sidebar-top">
+      <a href="{{ url_for('index') }}" class="logo">
+        <div class="logo-icon">
+          <i class="ph ph-brain"></i>
+          <span class="logo-icon-glow"></span>
+        </div>
+        <div class="logo-text">
+          <h2>DepriSense</h2>
+          <span>AI Analytics</span>
+        </div>
+      </a>
+      <button class="mobile-close" id="mobileClose" aria-label="Close menu">
+        <i class="ph ph-x"></i>
+      </button>
+    </div>
+
+    <!-- Section label -->
+    <div class="nav-section-label">Navigation</div>
+
+    <!-- Nav links -->
+    <nav class="sidebar-nav">
+
+      <a href="{{ url_for('index') }}"
+         class="nav-item {% if request.endpoint == 'index' %}active{% endif %}"
+         data-tooltip="Home">
+        <span class="nav-icon"><i class="ph ph-house"></i></span>
+        <span class="nav-label">Home</span>
+        <span class="nav-active-bar"></span>
+      </a>
+
+      <a href="{{ url_for('predict') }}"
+         class="nav-item {% if request.endpoint == 'predict' %}active{% endif %}"
+         data-tooltip="Predict">
+        <span class="nav-icon"><i class="ph ph-activity"></i></span>
+        <span class="nav-label">Predict</span>
+        <span class="nav-active-bar"></span>
+      </a>
+
+      <a href="{{ url_for('dashboard') }}"
+         class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}"
+         data-tooltip="Dashboard">
+        <span class="nav-icon"><i class="ph ph-chart-bar"></i></span>
+        <span class="nav-label">Dashboard</span>
+        <span class="nav-active-bar"></span>
+      </a>
+
+      <a href="{{ url_for('insights') }}"
+         class="nav-item {% if request.endpoint == 'insights' %}active{% endif %}"
+         data-tooltip="Insights">
+        <span class="nav-icon"><i class="ph ph-sparkle"></i></span>
+        <span class="nav-label">Insights</span>
+        <span class="nav-active-bar"></span>
+      </a>
+
+      <a href="{{ url_for('about') }}"
+         class="nav-item {% if request.endpoint == 'about' %}active{% endif %}"
+         data-tooltip="About">
+        <span class="nav-icon"><i class="ph ph-info"></i></span>
+        <span class="nav-label">About</span>
+        <span class="nav-active-bar"></span>
+      </a>
+
+      <a href="{{ url_for('contact') }}"
+         class="nav-item {% if request.endpoint == 'contact' %}active{% endif %}"
+         data-tooltip="Contact">
+        <span class="nav-icon"><i class="ph ph-envelope-simple"></i></span>
+        <span class="nav-label">Contact</span>
+        <span class="nav-active-bar"></span>
+      </a>
+
+    </nav>
+
+    <!-- Divider -->
+    <div class="sidebar-divider"></div>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      {% if model_loaded %}
+      <div class="model-status active">
+        <span class="status-dot"></span>
+        <span class="status-text">AI Model Online</span>
+      </div>
+      {% else %}
+      <div class="model-status demo">
+        <span class="status-dot"></span>
+        <span class="status-text">Demo Mode</span>
+      </div>
+      {% endif %}
+      <p class="version-tag">v{{ app_version }}</p>
+    </div>
+
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ========================= -->
+  <!-- Main Wrapper              -->
+  <!-- ========================= -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle">
+        <i class="ph ph-list"></i>
+      </button>
+      <div class="topbar-right">
+        <a href="{{ url_for('predict') }}" class="analyse-btn">Run AI Analysis</a>
+      </div>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">
+        <span>{{ message }}</span>
+        <button class="flash-close"><i class="ph ph-x"></i></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+
+  <!-- ========================= -->
+  <!-- Loading Overlay           -->
+  <!-- ========================= -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="scanner-container">
+      <div class="scanner-ring"></div>
+      <div class="scanner-ring second"></div>
+      <div class="scanner-core"></div>
+    </div>
+    <h2>AI Analysis Running</h2>
+    <p id="loadingText">Analyzing behavioral patterns...</p>
+  </div>
+
+  <!-- ========================= -->
+  <!-- JS                        -->
+  <!-- ========================= -->
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+
+  <!-- Premium Sidebar JS -->
+  <script>
+  (function () {
+    const sidebar     = document.getElementById('sidebar');
+    const collapseBtn = document.getElementById('sidebarCollapseBtn');
+    const mobileClose = document.getElementById('mobileClose');
+    const menuToggle  = document.getElementById('menuToggle');
+    const overlay     = document.getElementById('sidebarOverlay');
+    if (!sidebar) return;
+
+    /* Desktop collapse — persisted */
+    let collapsed = localStorage.getItem('sbCollapsed') === '1';
+    if (collapsed) sidebar.classList.add('collapsed');
+
+    collapseBtn && collapseBtn.addEventListener('click', () => {
+      collapsed = !collapsed;
+      sidebar.classList.toggle('collapsed', collapsed);
+      localStorage.setItem('sbCollapsed', collapsed ? '1' : '0');
+    });
+
+    /* Mobile open/close */
+    const openMobile  = () => { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; };
+    const closeMobile = () => { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); document.body.style.overflow = ''; };
+
+    menuToggle  && menuToggle.addEventListener('click', openMobile);
+    mobileClose && mobileClose.addEventListener('click', closeMobile);
+    overlay     && overlay.addEventListener('click', closeMobile);
+    document.addEventListener('keydown', e => e.key === 'Escape' && closeMobile());
+
+    /* Close on nav click (mobile) */
+    sidebar.querySelectorAll('.nav-item').forEach(item =>
+      item.addEventListener('click', () => window.innerWidth <= 768 && closeMobile())
+    );
+
+    /* Ripple on nav click */
+    sidebar.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function (e) {
+        const r   = document.createElement('span');
+        const box = this.getBoundingClientRect();
+        Object.assign(r.style, {
+          position: 'absolute', borderRadius: '50%',
+          width: '80px', height: '80px', pointerEvents: 'none',
+          background: 'rgba(99,120,255,0.18)',
+          top:  (e.clientY - box.top  - 40) + 'px',
+          left: (e.clientX - box.left - 40) + 'px',
+          transform: 'scale(0)',
+          animation: 'sbRipple 0.5s ease-out forwards'
+        });
+        this.appendChild(r);
+        setTimeout(() => r.remove(), 520);
+      });
+    });
+  })();
+  </script>
+
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

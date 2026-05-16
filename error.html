@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} – {{ title }}{% endblock %}
+{% block body_class %}page--error{% endblock %}
+
+{% block content %}
+
+<section class="error-page" aria-labelledby="error-heading">
+
+    <div class="error-page__code" aria-hidden="true">{{ code }}</div>
+
+    <div class="error-page__content glass-card">
+        <div class="error-page__icon" aria-hidden="true">
+            {% if code == 404 %}
+            <i class="ph ph-map-pin-area"></i>
+            {% elif code == 500 %}
+            <i class="ph ph-warning-octagon"></i>
+            {% elif code == 405 %}
+            <i class="ph ph-prohibit"></i>
+            {% elif code == 413 %}
+            <i class="ph ph-file-x"></i>
+            {% else %}
+            <i class="ph ph-warning-circle"></i>
+            {% endif %}
+        </div>
+
+        <h1 class="error-page__title" id="error-heading">{{ title }}</h1>
+        <p class="error-page__message">{{ message }}</p>
+
+        <div class="error-page__actions">
+            <a href="{{ url_for('index') }}" class="btn btn--neon">
+                <i class="ph ph-house-simple" aria-hidden="true"></i>
+                Return Home
+            </a>
+            <a href="{{ url_for('predict') }}" class="btn btn--ghost">
+                <i class="ph ph-activity" aria-hidden="true"></i>
+                Run Assessment
+            </a>
+        </div>
+
+        <!-- Quick nav on 404 -->
+        {% if code == 404 %}
+        <div class="error-page__suggestions">
+            <p class="error-page__suggestions-title">You might be looking for:</p>
+            <ul class="error-page__suggestions-list" role="list">
+                {% for link in nav_links %}
+                <li>
+                    <a href="{{ url_for(link.endpoint) }}" class="error-page__suggestion-link">
+                        {{ link.label }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}
